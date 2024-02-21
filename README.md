@@ -11,7 +11,8 @@ Code under development - test of components, like layers and other movements (mo
 
 Files for lasering flatpack of Dactyl, fully functioning files but not pretty for now
 
-##Next steps:
+## Next Steps
+
   - implement to one of the already existing keyboards (exchange the Arduino pro micro)
   - fit code to keyboard
   - test till nothing moves anymore
