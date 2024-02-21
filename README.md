@@ -20,4 +20,5 @@ Files for lasering flatpack of Dactyl, fully functioning files but not pretty fo
   - add complications display (weather, status keyboard,...)
   - add website to rp2040w to change/show settings
   - cleanup lasercut files
+  - functionallity of keyboard in bios (without os)
     
