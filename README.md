@@ -4,6 +4,11 @@ Own lasercut (flatpack) design Dactyl keyboard, code soly on the controller (wit
 
 ![1111](https://github.com/SKZBadHabit/MMDactyl/assets/72281265/1e6f7bd4-ab28-4964-b751-b02aff36cae3)
 
+
+###
+
+Adding a plan for cabeling and set up
+
 ## Coding
 
 Code under development - test of components, like layers and other movements (mouse,...)
