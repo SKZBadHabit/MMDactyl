@@ -34,3 +34,4 @@ Files for lasering flatpack of Dactyl, fully functioning files but not pretty fo
   - add 3 Layer and layer toggle button
   - display menu (perhaps over website,...)
   - hybernation of  the controller and power
+  - write data to file and read out (functions like runtime all,...)
