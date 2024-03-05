@@ -7,19 +7,25 @@ import microcontroller
 from adafruit_hid.keyboard import Keyboard
 from adafruit_hid.keycode import Keycode
 from adafruit_hid.mouse import Mouse
-import os
 import board, busio, displayio, os, terminalio
 import adafruit_displayio_ssd1306
+from adafruit_display_shapes.rect import Rect
 from adafruit_display_text import label
 import asyncio
+from adafruit_hid.consumer_control import ConsumerControl
+from adafruit_hid.consumer_control_code import ConsumerControlCode
+
 
 
 # TODO Trouble performance Display refresh --> try minimizing update rate / volume less change per update
 
 
+
+
 # Set up a keyboard/mouse device.
 kbd = Keyboard(usb_hid.devices)
 mouse = Mouse(usb_hid.devices)
+cc = ConsumerControl(usb_hid.devices)
 
 # Define the columns and rows using GPIO pins.
 cols = [digitalio.DigitalInOut(x) for x in (board.GP0, board.GP1, board.GP2, board.GP19, board.GP20, board.GP21)]
@@ -44,6 +50,7 @@ keypad = adafruit_matrixkeypad.Matrix_Keypad(rows, cols, keys)
 keypad1 = adafruit_matrixkeypad.Matrix_Keypad(cols, rows, keys1)
 
 layer = 1  # Initialize the layer variable
+layer_fixed = 0
 
 # Define debounce time in seconds for each keypad
 DEBOUNCE_TIME_KEYPAD1 = 0.02
@@ -53,11 +60,19 @@ DEBOUNCE_TIME_KEYPAD2 = 0.02
 last_key_press_time_keypad1 = time.monotonic()
 last_key_press_time_keypad2 = time.monotonic()
 
+
+
 # Variables to display refresh time
-display_delay = time.monotonic()
+display_delay_1 = time.monotonic()
+display_delay_2 = time.monotonic()
+display_delay_3 = time.monotonic()
+
 
 # Display Refresh time
-DISPLAY_REFRESH_TIME = 307 # Asynchron for better performance
+DISPLAY_REFRESH_TIME_STARTER = 5 # Asynchron for better performance
+DISPLAY_REFRESH_TIME_1 = 61 # Asynchron for better performance
+DISPLAY_REFRESH_TIME_2 = 62 # Asynchron for better performance
+DISPLAY_REFRESH_TIME_3 = 353 # Asynchron for better performance
 
 # Timers
 cpu_temp = 0
@@ -67,6 +82,8 @@ current_runtime = 0
 alltime_runtime = 0
 RUNTIME_REFRESH_TIME = 300 # five minutes update runtime
 FILENAME = "/runtime.txt"
+ENERGY_SAVE_REFRESH_TIME = 10
+energy_save = time.monotonic()
 
 # Define a list to track currently pressed keys for each keypad
 pressed_keys_keypad1 = []
@@ -147,9 +164,9 @@ key_mappings_keypad1_layer2 = {
     "114": Keycode.BACKSPACE,#
     "115": Keycode.F9,#
     "116": Keycode.F7,#
-    "121": "121",#
-    "122": Keycode.E,#
-    "123": Keycode.Q,#
+    "121": Keycode.T,#
+    "122": "122",#
+    "123": "123",#
     "124": Keycode.F11,#
     "125": Keycode.PAGE_DOWN,#
     "126": Keycode.PAGE_UP,#
@@ -211,27 +228,27 @@ key_mappings_keypad2_layer2 = {
 
 displayio.release_displays()
 
-board_type = os.uname().machine
-print(f"Board: {board_type}")
-
-if 'Pico' in board_type:
-    sda, scl = board.GP16, board.GP17
-    print("Supported.")
-    
-elif 'ESP32-S2' in board_type:
-    scl, sda = board.IO41, board.IO40 # With the ESP32-S2 you can use any IO pins as I2C pins
-    print("Supported.")
-    
-else:
-    print("This board is not directly supported. Change the pin definitions above.")
-    
+sda, scl = board.GP16, board.GP17    
 i2c = busio.I2C(scl, sda)
 display_bus = displayio.I2CDisplay(i2c, device_address=0x3C)
 display = adafruit_displayio_ssd1306.SSD1306(display_bus, width=128, height=64)
 
-# Make the display Group
-splash = displayio.Group()
-display.show(splash) 
+
+
+################################################################
+
+async def power_save():
+    global energy_save
+
+    if time.monotonic() - energy_save >= ENERGY_SAVE_REFRESH_TIME:
+        
+        save_mode = displayio.Group()
+        display.show(save_mode)
+        display.refresh()
+
+        energy_save = time.monotonic()
+
+
 
 ################################################################
 
@@ -270,50 +287,141 @@ def save_alltime_runtime():
         runtime_refresh = time.monotonic()
 
 ################################################################
- 
-# Create the CPU temperature label
-cpu_label = label.Label(terminalio.FONT, text="     MM - Dactyl", color=0xFFFF00, x=0, y=7)
-layer_label = label.Label(terminalio.FONT, text="         ...", color=0xFFFF00, x=0, y=22)
-runtime_now_label = label.Label(terminalio.FONT, text="     load display", color=0xFFFF00, x=0, y=37)
-runtime_all_label = label.Label(terminalio.FONT, text="      functions", color=0xFFFF00, x=0, y=52)
 
-# Add the label to the splash Group
-splash.append(layer_label)
-splash.append(cpu_label)
-splash.append(runtime_now_label)
-splash.append(runtime_all_label)
+
+    
+
+async def display_start():
+    global cpu_label, layer_label, runtime_now_label, runtime_all_label
+
+    # Define the labels and their initial text
+            
+    startdpgroup = displayio.Group()  # Clear the existing Group and create a new one
+    one = label.Label(terminalio.FONT, text="     MM - Dactyl", color=0xFFFF00, x=0, y=15)
+    two = label.Label(terminalio.FONT, text="    ModelNr: 3-02", color=0xFFFF00, x=0, y=33)
+
+        
+    # Add the labels to the splash Group
+    startdpgroup.append(one)
+    startdpgroup.append(two)
+
+    display.show(startdpgroup)
+        
+    # ----------------------- Progress BAR ---------------------------
+    # Define progress bar parameters
+    progress_bar_width = 100
+    progress_bar_height = 10
+    progress_bar_x = 14
+    progress_bar_y = 50  # Adjusted y position
+    progress_color = 0x00FF00  # Green
+
+    # Create the progress bar background
+    background_rect = Rect(progress_bar_x, progress_bar_y, progress_bar_width, progress_bar_height, fill=0x000000)
+    startdpgroup.append(background_rect)
+
+    # Calculate step size for filling the progress bar in 2 seconds
+    step_size = progress_bar_width / 60  # 60 steps for 2 seconds
+
+    # Fill the progress bar
+    for i in range(60):
+        progress_width = i * step_size
+        progress_rect = Rect(progress_bar_x, progress_bar_y, max(1, int(progress_width)), progress_bar_height, fill=progress_color)
+        startdpgroup.append(progress_rect)
+        display.refresh()
+        time.sleep(0.033)  # 1/30th of a second for smooth animation
+        startdpgroup.remove(progress_rect)
+
+    # After filling, display the progress bar fully filled
+    full_progress_rect = Rect(progress_bar_x, progress_bar_y, progress_bar_width, progress_bar_height, fill=progress_color)
+    startdpgroup.append(full_progress_rect)
+    display.refresh()
+
+
+    #------------ display Maingroup
+
+
+    maindpgroup = displayio.Group()  # Clear the existing Group and create a new one
+    # Define the labels and their initial text
+    cpu_label = label.Label(terminalio.FONT, text="", color=0xFFFF00, x=0, y=7)
+    layer_label = label.Label(terminalio.FONT, text="", color=0xFFFF00, x=0, y=22)
+    runtime_now_label = label.Label(terminalio.FONT, text="", color=0xFFFF00, x=0, y=37)
+    runtime_all_label = label.Label(terminalio.FONT, text="", color=0xFFFF00, x=0, y=52)
+        
+    # Add the labels to the splash Group
+    maindpgroup.append(layer_label)
+    maindpgroup.append(cpu_label)
+    maindpgroup.append(runtime_now_label)
+    maindpgroup.append(runtime_all_label)        
+
+    display.show(maindpgroup)
+
+      
+    
+    # Update CPU temperature label
+    cpu_label.text = "CPU Temp:    " + "{:.2f}".format(cpu_temp) + " °C"
+    # Update layer label
+    layer_label.text = "Layer:          " + str(layer)
+    # Update runtime now label
+    runtime_now_label.text = "Runtime now:   " + str(current_runtime) + " min"
+    # Update runtime all label
+    runtime_all_label.text = "Runtime all:   " + str("{:.0f}".format(alltime_runtime/60)) + " h"
+
+
+    
 
 ################################################################
 
-async def display_refresh():
-    global display_delay
-    global current_runtime
-    global alltime_runtime
 
-    if time.monotonic() - display_delay >= DISPLAY_REFRESH_TIME:
-        # Update the CPU temperature value
-        cpu_temp_str = "{:.2f}".format(cpu_temp) + " °C"
-        # Update only the temperature part of the cpu_label text
-        cpu_label.text = "CPU Temp:    " + cpu_temp_str
-        # Update the runtime labels
+async def display_refresh_cpu():
+    global display_delay_1
+    if time.monotonic() - display_delay_1 >= DISPLAY_REFRESH_TIME_1:
+        cpu_label.text = "CPU Temp:    " + "{:.2f}".format(cpu_temp) + " °C"
+        #display.refresh  # Refresh the display to reflect the changes
+        display_delay_1 = time.monotonic()
+
+async def display_refresh_current_runtime():
+
+    global current_runtime
+    global display_delay_2
+
+    if time.monotonic() - display_delay_2 >= DISPLAY_REFRESH_TIME_2:
         runtime_now_label.text = "Runtime now:   " + str(current_runtime) + " min"
+        
+        #display.refresh  # Refresh the display to reflect the changes
+        display_delay_2 = time.monotonic()
+
+async def display_refresh_all_runtime():
+
+    global alltime_runtime
+    global display_delay_3
+
+    if time.monotonic() - display_delay_3 >= DISPLAY_REFRESH_TIME_3:
+
         runtime_all_label.text = "Runtime all:   " + str("{:.0f}".format(alltime_runtime/60)) + " h"
         
-        display.refresh(minimum_frames_per_second=0)  # Refresh the display to reflect the changes
-        display_delay = time.monotonic()
+        #display.refresh  # Refresh the display to reflect the changes
+        display_delay_3 = time.monotonic()
 
 
+        
         
 ################################################################
 
 def handle_keypad1():
     """Handle key presses for keypad 1."""
-    global last_key_press_time_keypad1, pressed_keys_keypad1, layer
+    global last_key_press_time_keypad1, pressed_keys_keypad1, layer, display_delay, energy_save, maindpgroup
 
     if time.monotonic() - last_key_press_time_keypad1 >= DEBOUNCE_TIME_KEYPAD1:
+
+
         keys = keypad.pressed_keys
         for key in keys:
             if key not in pressed_keys_keypad1:
+                
+                energy_save = time.monotonic()
+
+
+                #display_delay = time.monotonic()
                 if layer == 1:
                     if key in key_mappings_keypad1:
                         if key == "151":
@@ -339,6 +447,15 @@ def handle_keypad1():
                         elif key == "132":
                             mouse.move(x=3, y=0)
 
+                        elif key == "122":
+                            cc.send(ConsumerControlCode.VOLUME_INCREMENT)
+                            cc.release()
+
+                        elif key == "123":
+                            cc.send(ConsumerControlCode.VOLUME_DECREMENT)
+                            cc.release()
+
+                            
                         elif isinstance(key_mappings_keypad1_layer2[key], tuple):
                             for keycode in key_mappings_keypad1_layer2[key]:
                                 kbd.press(keycode)
@@ -377,17 +494,25 @@ def handle_keypad1():
 
 def handle_keypad2():
     """Handle key presses for keypad 2."""
-    global last_key_press_time_keypad2, pressed_keys_keypad2, layer
+    global last_key_press_time_keypad2, pressed_keys_keypad2, layer, display_delay, energy_save, layer_fixed, maindpgroup
 
     if time.monotonic() - last_key_press_time_keypad2 >= DEBOUNCE_TIME_KEYPAD2:
+
         keys1 = keypad1.pressed_keys
         for key in keys1:
             if key not in pressed_keys_keypad2:
+
+                energy_save = time.monotonic()
+
+
+                #display_delay = time.monotonic()
                 if layer == 1:
                     if key in key_mappings_keypad2:
-                        if key_mappings_keypad2[key] == "233":
+                        if key == "233":
                             layer = 2
+                            layer_label.text = "Layer:          " + str(layer)
                             pressed_keys_keypad2.append("233")
+                            
 
                         else:
                             kbd.press(key_mappings_keypad2[key])
@@ -402,22 +527,26 @@ def handle_keypad2():
                             mouse.move(wheel=-1)
                              
                         elif key == "223":
-                            mouse.move(x=0, y=3)
+                            mouse.move(x=0, y=5)
      
                         elif key == "222":
-                            mouse.move(x=0, y=-3)
+                            mouse.move(x=0, y=-5)
 
                         elif isinstance(key_mappings_keypad2_layer2[key], tuple):
                             for keycode in key_mappings_keypad2_layer2[key]:
                                 kbd.press(keycode)
 
-                        else:
-                            if key_mappings_keypad2_layer2[key] == "233":
-                                pass
+                        elif key == "233":
+                            if layer_fixed == 1:
+                                layer_fixed = 0
+                                layer = 1
+                                layer_label.text = "Layer:          " + str(layer)
+                                
 
-                            else:
-                                kbd.press(key_mappings_keypad2_layer2[key])
-                                pressed_keys_keypad2.append(key)
+                        else:
+                        
+                            kbd.press(key_mappings_keypad2_layer2[key])
+                            pressed_keys_keypad2.append(key)
 
         for key in pressed_keys_keypad2.copy():
             if key not in keys1:
@@ -427,29 +556,36 @@ def handle_keypad2():
                         pressed_keys_keypad2.remove(key)
 
                 if layer == 2:
-                    if key_mappings_keypad2_layer2[key] == "233":
-                        layer = 1
-                        pressed_keys_keypad2.remove("233")
-                        kbd.release_all()
+                    if key in key_mappings_keypad2_layer2:
+                        if key == "233":
+                            
+                            pressed_keys_keypad2.remove("233")
+                            layer_fixed = 1
+                            
 
-                    else:
-                        kbd.release(key_mappings_keypad2_layer2[key])
-                        pressed_keys_keypad2.remove(key)
+                        else:
+                            kbd.release(key_mappings_keypad2_layer2[key])
+                            pressed_keys_keypad2.remove(key)
 
         last_key_press_time_keypad2 = time.monotonic()
 
 ################################################################
-
 async def main():
-    print("Entering main loop")
+
     read_alltime_runtime()  # Read all-time runtime at startup
+    await display_start()
     
     while True:
-        await display_refresh()  # Await display_refresh()
-        handle_keypad1()  # Call handle_keypad1() without await
-        handle_keypad2()  # Call handle_keypad2() without await
-        save_alltime_runtime()  # Save all-time runtime similar to display refresh
-    
+        #await power_save()
+        await display_refresh_current_runtime()  # Await display_refresh()
+        await display_refresh_all_runtime()  # Await display_refresh()
+        await display_refresh_cpu()
+        handle_keypad1()
+        handle_keypad2()
+        save_alltime_runtime()
+        await asyncio.sleep(0.01)  # Ensure event loop runs smoothly
+
+
 
 
 # Create and run the event loop
