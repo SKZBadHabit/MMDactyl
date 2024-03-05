@@ -20,7 +20,8 @@ from adafruit_hid.consumer_control_code import ConsumerControlCode
 # TODO Trouble performance Display refresh --> try minimizing update rate / volume less change per update
 
 
-
+#Setting to orignal herz
+microcontroller.cpu.frequency = 125000000
 
 # Set up a keyboard/mouse device.
 kbd = Keyboard(usb_hid.devices)
@@ -82,8 +83,10 @@ current_runtime = 0
 alltime_runtime = 0
 RUNTIME_REFRESH_TIME = 300 # five minutes update runtime
 FILENAME = "/runtime.txt"
-ENERGY_SAVE_REFRESH_TIME = 10
+ENERGY_SAVE_REFRESH_TIME = 180
 energy_save = time.monotonic()
+
+energy_mod = 0
 
 # Define a list to track currently pressed keys for each keypad
 pressed_keys_keypad1 = []
@@ -202,7 +205,7 @@ key_mappings_keypad2_layer2 = {
     "224": Keycode.X,#
     "225": Keycode.LEFT_ALT,
     "231": Keycode.ESCAPE,#
-    "232": Keycode.TAB,#,
+    "232": "232",# Display
     "233": "233", # FN Change
     "234": Keycode.LEFT_SHIFT,#
     "235": Keycode.LEFT_CONTROL,#
@@ -237,16 +240,65 @@ display = adafruit_displayio_ssd1306.SSD1306(display_bus, width=128, height=64)
 
 ################################################################
 
+
+
 async def power_save():
-    global energy_save
+    global energy_save, energy_mod
 
     if time.monotonic() - energy_save >= ENERGY_SAVE_REFRESH_TIME:
         
-        save_mode = displayio.Group()
-        display.show(save_mode)
-        display.refresh()
-
+        energy_mod = 1
+        display_off()
+        cpu_low_power()
+        
         energy_save = time.monotonic()
+
+def power_save_off():
+    cpu_full_power()
+    display_on()
+
+def cpu_low_power():
+    cpu_frequency_mhz = microcontroller.cpu.frequency
+    print("old CPU Frequency:", cpu_frequency_mhz, "Hz")
+    # Set CPU frequency to 65 MHz
+    microcontroller.cpu.frequency = 65000000
+    cpu_frequency_mhz = microcontroller.cpu.frequency
+    print("now CPU Frequency:", cpu_frequency_mhz, "Hz")
+    
+def cpu_full_power():
+    cpu_frequency_mhz = microcontroller.cpu.frequency
+    print("old CPU Frequency:", cpu_frequency_mhz, "Hz")
+    microcontroller.cpu.frequency = 125000000
+    cpu_frequency_mhz = microcontroller.cpu.frequency
+    print("now CPU Frequency:", cpu_frequency_mhz, "Hz")
+
+def display_off():
+    save_mode = displayio.Group()
+    display.show(save_mode)
+    display.refresh()
+
+def display_on():
+        display_main()
+
+
+def display_main():
+    global display_delay_1, maindpgroup, cpu_label, layer_label, runtime_now_label, runtime_all_label
+
+    maindpgroup = displayio.Group()
+
+    cpu_label = label.Label(terminalio.FONT, text="CPU Temp:    " + "{:.2f}".format(cpu_temp) + " °C", color=0xFFFF00, x=0, y=7)
+    layer_label = label.Label(terminalio.FONT, text="Layer:          " + str(layer), color=0xFFFF00, x=0, y=22)
+    runtime_now_label = label.Label(terminalio.FONT, text="Runtime now:   " + str(current_runtime) + " min", color=0xFFFF00, x=0, y=37)
+    runtime_all_label = label.Label(terminalio.FONT, text="Runtime all:   " + str("{:.0f}".format(alltime_runtime/60)) + " h", color=0xFFFF00, x=0, y=52)
+  
+    maindpgroup.append(layer_label)
+    maindpgroup.append(cpu_label)
+    maindpgroup.append(runtime_now_label)
+    maindpgroup.append(runtime_all_label)        
+
+    display.show(maindpgroup)
+    #display.refresh()
+
 
 
 
@@ -292,7 +344,7 @@ def save_alltime_runtime():
     
 
 async def display_start():
-    global cpu_label, layer_label, runtime_now_label, runtime_all_label
+    global cpu_label, layer_label, runtime_now_label, runtime_all_label, maindpgroup
 
     # Define the labels and their initial text
             
@@ -320,10 +372,10 @@ async def display_start():
     startdpgroup.append(background_rect)
 
     # Calculate step size for filling the progress bar in 2 seconds
-    step_size = progress_bar_width / 60  # 60 steps for 2 seconds
+    step_size = progress_bar_width / 20  # 60 steps for 2 seconds
 
     # Fill the progress bar
-    for i in range(60):
+    for i in range(20):
         progress_width = i * step_size
         progress_rect = Rect(progress_bar_x, progress_bar_y, max(1, int(progress_width)), progress_bar_height, fill=progress_color)
         startdpgroup.append(progress_rect)
@@ -409,7 +461,7 @@ async def display_refresh_all_runtime():
 
 def handle_keypad1():
     """Handle key presses for keypad 1."""
-    global last_key_press_time_keypad1, pressed_keys_keypad1, layer, display_delay, energy_save, maindpgroup
+    global last_key_press_time_keypad1, pressed_keys_keypad1, layer, display_delay, energy_save, maindpgroup, energy_mod, layer_label
 
     if time.monotonic() - last_key_press_time_keypad1 >= DEBOUNCE_TIME_KEYPAD1:
 
@@ -419,7 +471,9 @@ def handle_keypad1():
             if key not in pressed_keys_keypad1:
                 
                 energy_save = time.monotonic()
-
+                if energy_mod == 1:
+                    power_save_off()
+                    energy_mod = 0
 
                 #display_delay = time.monotonic()
                 if layer == 1:
@@ -494,7 +548,7 @@ def handle_keypad1():
 
 def handle_keypad2():
     """Handle key presses for keypad 2."""
-    global last_key_press_time_keypad2, pressed_keys_keypad2, layer, display_delay, energy_save, layer_fixed, maindpgroup
+    global last_key_press_time_keypad2, pressed_keys_keypad2, layer, display_delay, energy_save, layer_fixed, maindpgroup, energy_mod, layer_label
 
     if time.monotonic() - last_key_press_time_keypad2 >= DEBOUNCE_TIME_KEYPAD2:
 
@@ -503,7 +557,9 @@ def handle_keypad2():
             if key not in pressed_keys_keypad2:
 
                 energy_save = time.monotonic()
-
+                if energy_mod == 1:
+                    power_save_off()
+                    energy_mod = 0
 
                 #display_delay = time.monotonic()
                 if layer == 1:
@@ -532,6 +588,9 @@ def handle_keypad2():
                         elif key == "222":
                             mouse.move(x=0, y=-5)
 
+                        elif key == "232":
+                            display_off()
+                            
                         elif isinstance(key_mappings_keypad2_layer2[key], tuple):
                             for keycode in key_mappings_keypad2_layer2[key]:
                                 kbd.press(keycode)
@@ -541,6 +600,8 @@ def handle_keypad2():
                                 layer_fixed = 0
                                 layer = 1
                                 layer_label.text = "Layer:          " + str(layer)
+                                #SLEEP/DELAY for changing layer fix!!!!
+                                time.sleep(0.5)
                                 
 
                         else:
@@ -576,7 +637,7 @@ async def main():
     await display_start()
     
     while True:
-        #await power_save()
+        await power_save()
         await display_refresh_current_runtime()  # Await display_refresh()
         await display_refresh_all_runtime()  # Await display_refresh()
         await display_refresh_cpu()
