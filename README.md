@@ -1,46 +1,44 @@
 # MMDactyl - RP2040w Japanese Duplex Matrix
 
-Own lasercut (flatpack) design Dactyl keyboard, code soly on the controller (with libs)
+Welcome to MMDactyl, your custom-designed Dactyl keyboard powered by the RP2040w microcontroller. This keyboard is not only a functional input device but also a testament to precision engineering and innovative coding. Below, you'll find details on its development, coding progress, lasercut designs, completed steps, and what's next on the agenda.
 
-![1111](https://github.com/SKZBadHabit/MMDactyl/assets/72281265/1e6f7bd4-ab28-4964-b751-b02aff36cae3)
+![MMDactyl Keyboard](https://github.com/SKZBadHabit/MMDactyl/assets/72281265/1e6f7bd4-ab28-4964-b751-b02aff36cae3)
 
+## Coding Progress
 
-###
+The heart of MMDactyl lies in its meticulously crafted code. Currently at version 3.03, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is yet to be implemented, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms.
 
-Adding a plan for cabeling and set up
+### Status Overview
+- **Functional Layers**: Version 3.03 incorporates Layer 1 and Layer 2 seamlessly, providing users with versatile input options.
+- **Display Functionality**: The integrated display module offers essential information without relying on wireless connectivity.
+- **BIOS Compatibility**: MMDactyl seamlessly integrates into BIOS environments, ensuring compatibility across various systems.
+- **Layer Toggle**: Intuitive layer toggling enhances user experience, enabling effortless switching between configurations.
+- **Data Management**: Runtime data tracking is implemented, allowing users to monitor keyboard usage efficiently.
 
-## Coding
+## Lasercut Design
 
-Code under development - test of components, like layers and other movements (mouse,...)
+Crafted with precision, the lasercut design of MMDactyl ensures both aesthetic appeal and functional integrity. While the current files are fully functional, ongoing efforts are directed towards refining the design for enhanced aesthetics and ease of assembly.
 
-### Status of code
+## Completed Steps
 
-it is currently under development but fully functional V3.03 contains layer 1 and 2 and basic functionallity of the display, with bios support and without hibernation/energy saving - no wireless function
-
-
-## Lasercut
-
-Files for lasering flatpack of Dactyl, fully functioning files but not pretty for now
-
-
-## Done Steps
-
-  - implement to one of the already existing keyboards (exchange the Arduino pro micro)
-  - fit code to keyboard
-  - added display functionallity without wlan first
-  - functionallity of keyboard in bios (without os)
-  - add layer toggle button
-  - write data to file and read out (functions like runtime all,...) - runtime implemented
-    
+MMDactyl has already achieved significant milestones, including:
+- **Hardware Integration**: Successful integration into existing keyboard structures, replacing the Arduino Pro Micro seamlessly.
+- **Code Adaptation**: The codebase has been tailored to suit the unique characteristics of MMDactyl, ensuring optimal performance.
+- **Display Integration**: Display functionality is implemented, providing essential feedback without the need for wireless connectivity.
+- **BIOS Compatibility**: MMDactyl operates seamlessly within BIOS environments, guaranteeing system-wide compatibility.
+- **Layer Management**: The addition of a layer toggle button enhances user flexibility and workflow efficiency.
+- **Data Management**: Runtime data tracking is functional, providing insights into keyboard usage patterns.
 
 ## Next Steps
-  - test till nothing moves anymore
-  - complete wiring plan
-  - add complications to display (weather, status keyboard,...)
-  - add website to rp2040w to change/show settings
-  - cleanup lasercut files
-  - add 3 Layer
-  - display menu (perhaps over website,...)
-  - hybernation/energy savings of  the controller and power
-  - write read out data expansion (keycounter, settings,...)
-  
+
+As we move forward, the focus will be on further refinement and feature expansion. Upcoming tasks include:
+- **Testing and Refinement**: Rigorous testing will ensure the stability and reliability of MMDactyl under various conditions.
+- **Wiring Plan Completion**: Finalizing the wiring plan to optimize functionality and ease of assembly.
+- **Display Enhancements**: Introducing additional display functionalities such as weather updates and keyboard status indicators.
+- **Web Interface Integration**: Creating a web interface accessible via the RP2040w for convenient settings adjustment and monitoring.
+- **Design Cleanup**: Refining the lasercut files to streamline production and enhance aesthetics.
+- **Layer Expansion**: Implementing additional layers to accommodate diverse user preferences and workflows.
+- **Energy Management**: Introducing hibernation and energy-saving features to extend battery life and optimize power consumption.
+- **Data Expansion**: Further expanding data management capabilities, including key counter functionalities and customizable settings.
+
+Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technological innovation, and user-centric functionality.
