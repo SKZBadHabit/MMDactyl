@@ -96,7 +96,7 @@ DISPLAY_REFRESH_TIME_2 = 62 # Asynchron for better performance
 DISPLAY_REFRESH_TIME_3 = 353 # Asynchron for better performance
 
 # Timers
-WEB_UPDATE_TIME = 11
+WEB_UPDATE_TIME = 55
 web_update = 0
 cpu_temp = 0
 runtime_now = time.monotonic()
@@ -704,7 +704,7 @@ async def main():
 
     read_alltime_runtime()  # Read all-time runtime at startup
     await display_start()
-    #create_task(handle_http_requests()),
+    create_task(handle_http_requests()),
     
     while True:
         await power_save()
