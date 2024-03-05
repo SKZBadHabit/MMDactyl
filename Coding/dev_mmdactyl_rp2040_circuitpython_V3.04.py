@@ -17,14 +17,27 @@ from adafruit_hid.consumer_control_code import ConsumerControlCode
 import socketpool
 import wifi
 from asyncio import create_task, sleep as async_sleep
-from adafruit_httpserver import (
-    Server,
-    REQUEST_HANDLED_RESPONSE_SENT,
-    Request,
-    FileResponse,
-)
+import json
+from adafruit_httpserver import Server, REQUEST_HANDLED_RESPONSE_SENT, Request, FileResponse, Response
 
-# TODO Trouble performance Display refresh --> try minimizing update rate / volume less change per update
+
+
+
+
+
+
+
+
+
+
+# TODO start and stop webserver over button!
+
+
+
+
+
+
+
 
 
 #Setting to orignal herz
@@ -83,6 +96,8 @@ DISPLAY_REFRESH_TIME_2 = 62 # Asynchron for better performance
 DISPLAY_REFRESH_TIME_3 = 353 # Asynchron for better performance
 
 # Timers
+WEB_UPDATE_TIME = 11
+web_update = 0
 cpu_temp = 0
 runtime_now = time.monotonic()
 runtime_refresh = time.monotonic()
@@ -259,11 +274,20 @@ print("success to", ssid)
 pool = socketpool.SocketPool(wifi.radio)
 server = Server(pool, "/static", debug=True)
 
+@server.route("/static")
+def runtime_data(request: Request):
+    global current_runtime, alltime_runtime, cpu_temp, layer
+    if time.monotonic() - web_update >= WEB_UPDATE_TIME:
+        data = {
+            "runtime_now": current_runtime,
+            "runtime_all": alltime_runtime,
+            "cpu_temp": cpu_temp,
+            "layer": layer
+        }
+        web_update = time.monotonic()
+    return Response(request, json.dumps(data), content_type="application/json")
 
-@server.route("/")
-def base(request: Request):
- 
-    return FileResponse(request, "index.html")
+
 
 # Start the server.
 server.start(str(wifi.radio.ipv4_address))
@@ -329,7 +353,7 @@ def display_main():
 
     cpu_label = label.Label(terminalio.FONT, text="CPU Temp:    " + "{:.2f}".format(cpu_temp) + " °C", color=0xFFFF00, x=0, y=7)
     layer_label = label.Label(terminalio.FONT, text="Layer:          " + str(layer), color=0xFFFF00, x=0, y=22)
-    runtime_now_label = label.Label(terminalio.FONT, text="Runtime now:   " + str(current_runtime) + " min", color=0xFFFF00, x=0, y=37)
+    runtime_now_label = label.Label(terminalio.FONT, text="Runtime now:   " + str(current_runtime) + "min", color=0xFFFF00, x=0, y=37)
     runtime_all_label = label.Label(terminalio.FONT, text="Runtime all:   " + str("{:.0f}".format(alltime_runtime/60)) + " h", color=0xFFFF00, x=0, y=52)
   
     maindpgroup.append(layer_label)
@@ -367,8 +391,7 @@ def save_alltime_runtime():
 
     if time.monotonic() - runtime_refresh >= RUNTIME_REFRESH_TIME:
         try:
-            cpu_temp = microcontroller.cpu.temperature
-
+            
             current_runtime += 5
             alltime_runtime += 5
 
@@ -448,14 +471,14 @@ async def display_start():
 
     display.show(maindpgroup)
 
-      
+    cpu_temp = microcontroller.cpu.temperature
     
     # Update CPU temperature label
     cpu_label.text = "CPU Temp:    " + "{:.2f}".format(cpu_temp) + " °C"
     # Update layer label
     layer_label.text = "Layer:          " + str(layer)
     # Update runtime now label
-    runtime_now_label.text = "Runtime now:   " + str(current_runtime) + " min"
+    runtime_now_label.text = "Runtime now:   " + str(current_runtime) + "min"
     # Update runtime all label
     runtime_all_label.text = "Runtime all:   " + str("{:.0f}".format(alltime_runtime/60)) + " h"
 
@@ -468,6 +491,7 @@ async def display_start():
 async def display_refresh_cpu():
     global display_delay_1
     if time.monotonic() - display_delay_1 >= DISPLAY_REFRESH_TIME_1:
+        cpu_temp = microcontroller.cpu.temperature
         cpu_label.text = "CPU Temp:    " + "{:.2f}".format(cpu_temp) + " °C"
         #display.refresh  # Refresh the display to reflect the changes
         display_delay_1 = time.monotonic()
@@ -680,7 +704,7 @@ async def main():
 
     read_alltime_runtime()  # Read all-time runtime at startup
     await display_start()
-    create_task(handle_http_requests()),
+    #create_task(handle_http_requests()),
     
     while True:
         await power_save()
