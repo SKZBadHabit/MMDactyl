@@ -15,7 +15,7 @@ Code under development - test of components, like layers and other movements (mo
 
 ### Status of code
 
-it is currently under development but fully functional V3.02 contains layer 1 and 2 and basic functionallity of the display, without bios support and without hibernation
+it is currently under development but fully functional V3.03 contains layer 1 and 2 and basic functionallity of the display, with bios support and without hibernation/energy saving - no wireless function
 
 
 ## Lasercut
@@ -28,15 +28,19 @@ Files for lasering flatpack of Dactyl, fully functioning files but not pretty fo
   - implement to one of the already existing keyboards (exchange the Arduino pro micro)
   - fit code to keyboard
   - added display functionallity without wlan first
+  - functionallity of keyboard in bios (without os)
+  - add layer toggle button
+  - write data to file and read out (functions like runtime all,...) - runtime implemented
     
 
 ## Next Steps
   - test till nothing moves anymore
+  - complete wiring plan
   - add complications to display (weather, status keyboard,...)
   - add website to rp2040w to change/show settings
   - cleanup lasercut files
-  - functionallity of keyboard in bios (without os)
-  - add 3 Layer and layer toggle button
+  - add 3 Layer
   - display menu (perhaps over website,...)
-  - hybernation of  the controller and power
-  - write data to file and read out (functions like runtime all,...)
+  - hybernation/energy savings of  the controller and power
+  - write read out data expansion (keycounter, settings,...)
+  
