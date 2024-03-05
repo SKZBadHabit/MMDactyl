@@ -6,7 +6,7 @@ Welcome to MMDactyl, your custom-designed Dactyl keyboard powered by the RP2040w
 
 ## Coding Progress
 
-The heart of MMDactyl lies in its meticulously crafted code. Currently at version 3.03, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is yet to be implemented, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms.
+The heart of MMDactyl lies in its meticulously crafted code. Currently at version 3.04, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is startin to be implemented, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms.
 
 ### Status Overview
 - **Functional Layers**: Version 3.03 incorporates Layer 1 and Layer 2 seamlessly, providing users with versatile input options.
@@ -35,10 +35,10 @@ As we move forward, the focus will be on further refinement and feature expansio
 - **Testing and Refinement**: Rigorous testing will ensure the stability and reliability of MMDactyl under various conditions.
 - **Wiring Plan Completion**: Finalizing the wiring plan to optimize functionality and ease of assembly.
 - **Display Enhancements**: Introducing additional display functionalities such as weather updates and keyboard status indicators.
-- **Web Interface Integration**: Creating a web interface accessible via the RP2040w for convenient settings adjustment and monitoring.
+- **Web Interface Integration**: Creating a web interface accessible via the RP2040w for convenient settings adjustment and monitoring. --> Started with Version 3.04
 - **Design Cleanup**: Refining the lasercut files to streamline production and enhance aesthetics.
 - **Layer Expansion**: Implementing additional layers to accommodate diverse user preferences and workflows.
-- **Energy Management**: Introducing hibernation and energy-saving features to extend battery life and optimize power consumption. /started nearly finished - CPU reducing and Display clearing
+- **Energy Management**: Introducing hibernation and energy-saving features to extend battery life and optimize power consumption. /started nearly finished - CPU reducing and Display clearing --> Missing wireless on/off
 - **Data Expansion**: Further expanding data management capabilities, including key counter functionalities and customizable settings.
 
 Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technological innovation, and user-centric functionality.
