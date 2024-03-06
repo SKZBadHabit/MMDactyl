@@ -6,7 +6,7 @@ Welcome to MMDactyl, your custom-designed Dactyl keyboard powered by the RP2040w
 
 ## Coding Progress
 
-The heart of MMDactyl lies in its meticulously crafted code. Currently at version 3.04, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is startin to be implemented, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms.
+The heart of MMDactyl lies in its meticulously crafted code. Currently at version 3.10, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is startin to be implemented, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms.
 
 ### Status Overview
 - **Functional Layers**: Version 3.03 incorporates Layer 1 and Layer 2 seamlessly, providing users with versatile input options.
