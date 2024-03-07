@@ -22,22 +22,8 @@ from adafruit_httpserver import Server, REQUEST_HANDLED_RESPONSE_SENT, Request, 
 
 
 
-
-
-
-
-
-
-
-
 # TODO start and stop webserver over button!
-
-
-
-
-
-
-
+# TODO when website is visited performance in the ass! --> DONE Refresh button needs to be pressed now!
 
 
 #Setting to orignal herz
@@ -95,20 +81,21 @@ DISPLAY_REFRESH_TIME_1 = 61 # Asynchron for better performance
 DISPLAY_REFRESH_TIME_2 = 62 # Asynchron for better performance
 DISPLAY_REFRESH_TIME_3 = 353 # Asynchron for better performance
 
-# Timers
-WEB_UPDATE_TIME = 55
-web_update = 0
+# MIXED
 cpu_temp = 0
 runtime_now = time.monotonic()
 runtime_refresh = time.monotonic()
 current_runtime = 0
 alltime_runtime = 0
 RUNTIME_REFRESH_TIME = 300 # five minutes update runtime
-FILENAME = "/runtime.txt"
+FILENAME_RUNTIME = "/runtime.txt"
+FILENAME_KEYPRESS = "/keypress.txt"
 ENERGY_SAVE_REFRESH_TIME = 180
 energy_save = time.monotonic()
-
 energy_mod = 0
+current_keypress = 0
+alltime_keypress = 0
+templastcurrentkeypresses = 0
 
 # Define a list to track currently pressed keys for each keypad
 pressed_keys_keypad1 = []
@@ -232,7 +219,7 @@ key_mappings_keypad2_layer2 = {
     "234": Keycode.LEFT_SHIFT,#
     "235": Keycode.LEFT_CONTROL,#
     "241": Keycode.F10,#
-    "242": Keycode.P,#
+    "242": 242,# wireless functions
     "243": Keycode.SEMICOLON,#
     "244": Keycode.KEYPAD_BACKSLASH,#
     "245": Keycode.RIGHT_BRACKET,#
@@ -264,44 +251,72 @@ display = adafruit_displayio_ssd1306.SSD1306(display_bus, width=128, height=64)
 
 #Wireless Setup
 
+startdproup = displayio.Group()
+
+info = label.Label(terminalio.FONT, text="Startup", color=0xFFFF00, x=0, y=30)
+startdproup.append(info)        
+display.show(startdproup)
+
+
 ssid = os.getenv("H_WIFI_SSID")
 password = os.getenv("H_WIFI_PASSWORD")
 
-print("try to", ssid)
-wifi.radio.connect(ssid, password)
-print("success to", ssid)
 
-pool = socketpool.SocketPool(wifi.radio)
-server = Server(pool, "/static", debug=True)
 
-@server.route("/static")
-def runtime_data(request: Request):
-    global current_runtime, alltime_runtime, cpu_temp, layer
-    if time.monotonic() - web_update >= WEB_UPDATE_TIME:
+try:
+    print("try to con", ssid)
+    info.text = "try to " + ssid
+    wifi.radio.connect(ssid, password)
+    print("success to", ssid)
+    info.text = "con to " + ssid
+    time.sleep(2)
+
+    pool = socketpool.SocketPool(wifi.radio)
+    server = Server(pool, "/static", debug=True)
+
+    @server.route("/data")
+    def runtime_data(request: Request):
+        global current_runtime, alltime_runtime, layer
+        
         data = {
-            "runtime_now": current_runtime,
-            "runtime_all": alltime_runtime,
-            "cpu_temp": cpu_temp,
-            "layer": layer
-        }
-        web_update = time.monotonic()
-    return Response(request, json.dumps(data), content_type="application/json")
+                "cpu_speed": microcontroller.cpu.frequency/1000000,
+                "cpu_temp": microcontroller.cpu.temperature,
+                "runtime_now": current_runtime,
+                "runtime_all": str("{:.0f}".format(alltime_runtime/60)),
+                "keypress_now":current_keypress,
+                "keypress_all": alltime_keypress,
+                "layer": layer
+                }
+        return Response(request, json.dumps(data), content_type="application/json")
+            
+        
 
+        # Start the server.
+    server.start(str(wifi.radio.ipv4_address))
+    info.text = "IP: " + str(wifi.radio.ipv4_address)
+    time.sleep(2)
 
+except Exception as e:
+    print("no WIFI connection")
+    info.text = "not con to " + ssid
+    time.sleep(2)
+    
 
-# Start the server.
-server.start(str(wifi.radio.ipv4_address))
 
 async def handle_http_requests():
-    while True:
-        # Process any waiting requests
-        pool_result = server.poll()
+    try:
+        while True:
+            # Process any waiting requests
+            pool_result = server.poll()
 
-        if pool_result == REQUEST_HANDLED_RESPONSE_SENT:
-            # Do something only after handling a request
-            pass
+            if pool_result == REQUEST_HANDLED_RESPONSE_SENT:
+                # Do something only after handling a request
+                pass
 
-        await async_sleep(0)
+            await async_sleep(0)
+    except Exception as e:
+        print("no WIFI connection")
+        
 
 ################################################################
 
@@ -369,25 +384,26 @@ def display_main():
 
 ################################################################
 
-# Runtime Read/Writer:
+#  Read/Writer:
 
 # Function to read all-time runtime from file
 def read_alltime_runtime():
-    global alltime_runtime
+    global alltime_runtime, alltime_keypress
 
     try:
-        with open(FILENAME, "r") as file:
+        with open(FILENAME_RUNTIME, "r") as file:
             alltime_runtime = int(file.read())
+        with open(FILENAME_KEYPRESS, "r") as file:
+            alltime_keypress = int(file.read())
+
     except Exception as e:
         print("Error reading file:", e)
         return 0
     
-# Function to save all-time runtime to file
+# Function to save all-time runtime/keypress to file
 def save_alltime_runtime():
-    global runtime_refresh
-    global current_runtime
-    global alltime_runtime
-    global cpu_temp
+    global runtime_refresh, current_runtime, alltime_runtime, cpu_temp, alltime_keypress, current_keypress, templastcurrentkeypresses
+
 
     if time.monotonic() - runtime_refresh >= RUNTIME_REFRESH_TIME:
         try:
@@ -395,8 +411,19 @@ def save_alltime_runtime():
             current_runtime += 5
             alltime_runtime += 5
 
-            with open(FILENAME, "w") as file:
+            
+
+            alltime_keypress += current_keypress - templastcurrentkeypresses
+            templastcurrentkeypresses = current_keypress
+
+            with open(FILENAME_RUNTIME, "w") as file:
                 file.write(str(alltime_runtime))
+
+            with open(FILENAME_KEYPRESS, "w") as file:
+                file.write(str(alltime_keypress))
+            
+            print ("keypress now: ",  current_keypress)
+            print ("keypress all: ",  alltime_keypress)
 
         except Exception as e:
             print("Error writing to file:", e)
@@ -489,7 +516,7 @@ async def display_start():
 
 
 async def display_refresh_cpu():
-    global display_delay_1
+    global display_delay_1, cpu_temp
     if time.monotonic() - display_delay_1 >= DISPLAY_REFRESH_TIME_1:
         cpu_temp = microcontroller.cpu.temperature
         cpu_label.text = "CPU Temp:    " + "{:.2f}".format(cpu_temp) + " °C"
@@ -502,7 +529,7 @@ async def display_refresh_current_runtime():
     global display_delay_2
 
     if time.monotonic() - display_delay_2 >= DISPLAY_REFRESH_TIME_2:
-        runtime_now_label.text = "Runtime now:   " + str(current_runtime) + " min"
+        runtime_now_label.text = "Runtime now:   " + str(current_runtime) + "min"
         
         #display.refresh  # Refresh the display to reflect the changes
         display_delay_2 = time.monotonic()
@@ -526,7 +553,7 @@ async def display_refresh_all_runtime():
 
 def handle_keypad1():
     """Handle key presses for keypad 1."""
-    global last_key_press_time_keypad1, pressed_keys_keypad1, layer, display_delay, energy_save, maindpgroup, energy_mod, layer_label
+    global last_key_press_time_keypad1, pressed_keys_keypad1, layer, display_delay, energy_save, maindpgroup, energy_mod, layer_label, current_keypress
 
     if time.monotonic() - last_key_press_time_keypad1 >= DEBOUNCE_TIME_KEYPAD1:
 
@@ -535,6 +562,7 @@ def handle_keypad1():
         for key in keys:
             if key not in pressed_keys_keypad1:
                 
+                current_keypress += 1
                 energy_save = time.monotonic()
                 if energy_mod == 1:
                     power_save_off()
@@ -613,14 +641,15 @@ def handle_keypad1():
 
 def handle_keypad2():
     """Handle key presses for keypad 2."""
-    global last_key_press_time_keypad2, pressed_keys_keypad2, layer, display_delay, energy_save, layer_fixed, maindpgroup, energy_mod, layer_label
+    global last_key_press_time_keypad2, pressed_keys_keypad2, layer, display_delay, energy_save, layer_fixed, maindpgroup, energy_mod, layer_label, current_keypress
 
     if time.monotonic() - last_key_press_time_keypad2 >= DEBOUNCE_TIME_KEYPAD2:
 
         keys1 = keypad1.pressed_keys
         for key in keys1:
             if key not in pressed_keys_keypad2:
-
+                
+                current_keypress += 1
                 energy_save = time.monotonic()
                 if energy_mod == 1:
                     power_save_off()
@@ -656,10 +685,9 @@ def handle_keypad2():
                         elif key == "232":
                             display_off()
 
-                        elif isinstance(key_mappings_keypad2_layer2[key], tuple):
-                            for keycode in key_mappings_keypad2_layer2[key]:
-                                kbd.press(keycode)
-
+                        elif key == "242":
+                            pass
+                        
                         elif key == "233":
                             if layer_fixed == 1:
                                 layer_fixed = 0
@@ -667,6 +695,12 @@ def handle_keypad2():
                                 layer_label.text = "Layer:          " + str(layer)
                                 #SLEEP/DELAY for changing layer fix!!!!
                                 time.sleep(0.5)
+
+                        elif isinstance(key_mappings_keypad2_layer2[key], tuple):
+                            for keycode in key_mappings_keypad2_layer2[key]:
+                                kbd.press(keycode)
+
+                        
                                 
 
                         else:
