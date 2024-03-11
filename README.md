@@ -28,17 +28,18 @@ MMDactyl has already achieved significant milestones, including:
 - **BIOS Compatibility**: MMDactyl operates seamlessly within BIOS environments, guaranteeing system-wide compatibility.
 - **Layer Management**: The addition of a layer toggle button enhances user flexibility and workflow efficiency.
 - **Data Management**: Runtime data tracking is functional, providing insights into keyboard usage patterns.
+- **Web Interface Integration**: Creating a web interface accessible via the RP2040w for convenient settings adjustment and monitoring. --> Started with Version 3.04
+- **Time Date**: Time and date synchronistation and displaying on oled from ntp server
 
 ## Next Steps
 
 As we move forward, the focus will be on further refinement and feature expansion. Upcoming tasks include:
 - **Testing and Refinement**: Rigorous testing will ensure the stability and reliability of MMDactyl under various conditions.
 - **Wiring Plan Completion**: Finalizing the wiring plan to optimize functionality and ease of assembly.
-- **Display Enhancements**: Introducing additional display functionalities such as weather updates and keyboard status indicators.
-- **Web Interface Integration**: Creating a web interface accessible via the RP2040w for convenient settings adjustment and monitoring. --> Started with Version 3.04
+- **Display Enhancements**: Introducing additional display functionalities such as weather updates and keyboard status indicators./ for now only one option
 - **Design Cleanup**: Refining the lasercut files to streamline production and enhance aesthetics.
 - **Layer Expansion**: Implementing additional layers to accommodate diverse user preferences and workflows.
 - **Energy Management**: Introducing hibernation and energy-saving features to extend battery life and optimize power consumption. /started nearly finished - CPU reducing and Display clearing --> Missing wireless on/off
-- **Data Expansion**: Further expanding data management capabilities, including key counter functionalities and customizable settings.
+- **Data Expansion**: Further expanding data management capabilities, including key counter functionalities and customizable settings. --> Key counter implemented customizable settings planed (Keyboard layout definition over file (perhaps))
 
 Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technological innovation, and user-centric functionality.
