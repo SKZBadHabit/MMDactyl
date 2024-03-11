@@ -19,11 +19,14 @@ import wifi
 from asyncio import create_task, sleep as async_sleep
 import json
 from adafruit_httpserver import Server, REQUEST_HANDLED_RESPONSE_SENT, Request, FileResponse, Response
+import adafruit_ntp
 
 
 
-# TODO start and stop webserver over button!
-# TODO when website is visited performance in the ass! --> DONE Refresh button needs to be pressed now!
+# TODO start and stop webserver / WIFI over button and in energy saving Mode
+
+# TODO -- ADD autorefresh option in Website
+
 
 
 #Setting to orignal herz
@@ -90,12 +93,19 @@ alltime_runtime = 0
 RUNTIME_REFRESH_TIME = 300 # five minutes update runtime
 FILENAME_RUNTIME = "/runtime.txt"
 FILENAME_KEYPRESS = "/keypress.txt"
-ENERGY_SAVE_REFRESH_TIME = 180
+ENERGY_SAVE_REFRESH_TIME = 380
+DATE_TIME_REFRESH_TIME = 63
 energy_save = time.monotonic()
 energy_mod = 0
 current_keypress = 0
 alltime_keypress = 0
 templastcurrentkeypresses = 0
+display_off_manually = 0
+date_time_refresh =0
+formatted_time = "00:00"
+formatted_date = "01.01.1000"
+
+
 
 # Define a list to track currently pressed keys for each keypad
 pressed_keys_keypad1 = []
@@ -219,7 +229,7 @@ key_mappings_keypad2_layer2 = {
     "234": Keycode.LEFT_SHIFT,#
     "235": Keycode.LEFT_CONTROL,#
     "241": Keycode.F10,#
-    "242": 242,# wireless functions
+    "242": 242,# Display
     "243": Keycode.SEMICOLON,#
     "244": Keycode.KEYPAD_BACKSLASH,#
     "245": Keycode.RIGHT_BRACKET,#
@@ -261,7 +271,7 @@ display.show(startdproup)
 ssid = os.getenv("H_WIFI_SSID")
 password = os.getenv("H_WIFI_PASSWORD")
 
-
+display_html_power = False  # Initialize display power variable
 
 try:
     print("try to con", ssid)
@@ -273,25 +283,41 @@ try:
 
     pool = socketpool.SocketPool(wifi.radio)
     server = Server(pool, "/static", debug=True)
+    ntp = adafruit_ntp.NTP(pool, tz_offset=1)
 
-    @server.route("/data")
+  
+
+    @server.route("/data", methods=["GET", "POST"])  # Allow POST requests
     def runtime_data(request: Request):
-        global current_runtime, alltime_runtime, layer
+        global current_runtime, alltime_runtime, layer, display_html_power, display_off_manually
+
+        if request.method == "POST":
+            try:
+                data = request.json()
+                display_html_power = data.get("display_html_power", False)
+                print("Display HTML Power:", display_html_power)
+                if display_html_power == True:
+                    display_off_manually = 1
+                    display_off()
+                if display_html_power == False:
+                    display_on()
+                    display_off_manually = 0
+            except Exception as e:
+                print("Error processing POST request:", e)
         
         data = {
-                "cpu_speed": microcontroller.cpu.frequency/1000000,
-                "cpu_temp": microcontroller.cpu.temperature,
-                "runtime_now": current_runtime,
-                "runtime_all": str("{:.0f}".format(alltime_runtime/60)),
-                "keypress_now":current_keypress,
-                "keypress_all": alltime_keypress,
-                "layer": layer
-                }
+            "cpu_speed": microcontroller.cpu.frequency / 1000000,
+            "cpu_temp": microcontroller.cpu.temperature,
+            "runtime_now": current_runtime,
+            "runtime_all": str("{:.0f}".format(alltime_runtime / 60)),
+            "keypress_now": current_keypress,
+            "keypress_all": alltime_keypress,
+            "layer": layer,
+            "display_html_power": display_html_power  # Include display power state in response
+        }
         return Response(request, json.dumps(data), content_type="application/json")
-            
-        
 
-        # Start the server.
+    # Start the server.
     server.start(str(wifi.radio.ipv4_address))
     info.text = "IP: " + str(wifi.radio.ipv4_address)
     time.sleep(2)
@@ -300,6 +326,7 @@ except Exception as e:
     print("no WIFI connection")
     info.text = "not con to " + ssid
     time.sleep(2)
+
     
 
 
@@ -319,8 +346,35 @@ async def handle_http_requests():
         
 
 ################################################################
+        
 
+async def time_date():
+    global formatted_time, formatted_date, date_time_refresh
 
+    if time.monotonic() - date_time_refresh >= DATE_TIME_REFRESH_TIME:
+
+        try:
+            # Get the datetime from the NTP server
+            ntp_time = ntp.datetime
+            
+            # Format the time as "HH:MM"
+            formatted_time = "{:02d}:{:02d}".format(ntp_time.tm_hour, ntp_time.tm_min)
+            # Format the date as "DD.MM.YYYY"
+            formatted_date = "{:02d}.{:02d}.{:04d}".format(ntp_time.tm_mday, ntp_time.tm_mon, ntp_time.tm_year)
+
+            # Print the formatted time and date
+            print("Time:", formatted_time)
+            print("Date:", formatted_date)
+
+            date_time_refresh = time.monotonic()
+
+            return formatted_time, formatted_date
+    
+        except Exception as e:
+            print("no WIFI connection / NTP not working")
+            date_time_refresh = time.monotonic()
+
+################################################################        
 
 async def power_save():
     global energy_save, energy_mod
@@ -335,7 +389,8 @@ async def power_save():
 
 def power_save_off():
     cpu_full_power()
-    display_on()
+    if display_off_manually == 0:
+        display_on()
 
 def cpu_low_power():
     cpu_frequency_mhz = microcontroller.cpu.frequency
@@ -362,19 +417,19 @@ def display_on():
 
 
 def display_main():
-    global display_delay_1, maindpgroup, cpu_label, layer_label, runtime_now_label, runtime_all_label
+    global display_delay_1, maindpgroup, cpu_label, layer_label, runtime_now_label, keypress_now_label, formatted_time
 
     maindpgroup = displayio.Group()
 
     cpu_label = label.Label(terminalio.FONT, text="CPU Temp:    " + "{:.2f}".format(cpu_temp) + " °C", color=0xFFFF00, x=0, y=7)
     layer_label = label.Label(terminalio.FONT, text="Layer:          " + str(layer), color=0xFFFF00, x=0, y=22)
-    runtime_now_label = label.Label(terminalio.FONT, text="Runtime now:   " + str(current_runtime) + "min", color=0xFFFF00, x=0, y=37)
-    runtime_all_label = label.Label(terminalio.FONT, text="Runtime all:   " + str("{:.0f}".format(alltime_runtime/60)) + " h", color=0xFFFF00, x=0, y=52)
+    runtime_now_label = label.Label(terminalio.FONT, text="Runtime now:  " + str(current_runtime) + "min", color=0xFFFF00, x=0, y=37)
+    keypress_now_label = label.Label(terminalio.FONT, text=formatted_date + "    " + formatted_time, color=0xFFFF00, x=0, y=52)
   
     maindpgroup.append(layer_label)
     maindpgroup.append(cpu_label)
     maindpgroup.append(runtime_now_label)
-    maindpgroup.append(runtime_all_label)        
+    maindpgroup.append(keypress_now_label)        
 
     display.show(maindpgroup)
     #display.refresh()
@@ -422,8 +477,7 @@ def save_alltime_runtime():
             with open(FILENAME_KEYPRESS, "w") as file:
                 file.write(str(alltime_keypress))
             
-            print ("keypress now: ",  current_keypress)
-            print ("keypress all: ",  alltime_keypress)
+
 
         except Exception as e:
             print("Error writing to file:", e)
@@ -435,7 +489,16 @@ def save_alltime_runtime():
     
 
 async def display_start():
-    global cpu_label, layer_label, runtime_now_label, runtime_all_label, maindpgroup
+    global cpu_label, layer_label, runtime_now_label, keypress_now_label, maindpgroup, formatted_time, formatted_date, ntp_time
+
+    try:
+        ntp_time = ntp.datetime    
+        # Format the time as "HH:MM"
+        formatted_time = "{:02d}:{:02d}".format(ntp_time.tm_hour, ntp_time.tm_min)
+        # Format the date as "DD.MM.YYYY"
+        formatted_date = "{:02d}.{:02d}.{:04d}".format(ntp_time.tm_mday, ntp_time.tm_mon, ntp_time.tm_year)
+    except Exception as e:
+        print("_no WIFI connection / NTP not working")
 
     # Define the labels and their initial text
             
@@ -488,13 +551,13 @@ async def display_start():
     cpu_label = label.Label(terminalio.FONT, text="", color=0xFFFF00, x=0, y=7)
     layer_label = label.Label(terminalio.FONT, text="", color=0xFFFF00, x=0, y=22)
     runtime_now_label = label.Label(terminalio.FONT, text="", color=0xFFFF00, x=0, y=37)
-    runtime_all_label = label.Label(terminalio.FONT, text="", color=0xFFFF00, x=0, y=52)
+    keypress_now_label = label.Label(terminalio.FONT, text="", color=0xFFFF00, x=0, y=52)
         
     # Add the labels to the splash Group
     maindpgroup.append(layer_label)
     maindpgroup.append(cpu_label)
     maindpgroup.append(runtime_now_label)
-    maindpgroup.append(runtime_all_label)        
+    maindpgroup.append(keypress_now_label)        
 
     display.show(maindpgroup)
 
@@ -505,9 +568,9 @@ async def display_start():
     # Update layer label
     layer_label.text = "Layer:          " + str(layer)
     # Update runtime now label
-    runtime_now_label.text = "Runtime now:   " + str(current_runtime) + "min"
+    runtime_now_label.text = "Runtime now:  " + str(current_runtime) + "min"
     # Update runtime all label
-    runtime_all_label.text = "Runtime all:   " + str("{:.0f}".format(alltime_runtime/60)) + " h"
+    keypress_now_label.text = formatted_date + "    " + formatted_time
 
 
     
@@ -529,19 +592,18 @@ async def display_refresh_current_runtime():
     global display_delay_2
 
     if time.monotonic() - display_delay_2 >= DISPLAY_REFRESH_TIME_2:
-        runtime_now_label.text = "Runtime now:   " + str(current_runtime) + "min"
+        runtime_now_label.text = "Runtime now:  " + str(current_runtime) + "min"
         
         #display.refresh  # Refresh the display to reflect the changes
         display_delay_2 = time.monotonic()
 
 async def display_refresh_all_runtime():
 
-    global alltime_runtime
-    global display_delay_3
+    global alltime_runtime, display_delay_3, formatted_time
 
     if time.monotonic() - display_delay_3 >= DISPLAY_REFRESH_TIME_3:
 
-        runtime_all_label.text = "Runtime all:   " + str("{:.0f}".format(alltime_runtime/60)) + " h"
+        keypress_now_label.text = formatted_date + "    " + formatted_time
         
         #display.refresh  # Refresh the display to reflect the changes
         display_delay_3 = time.monotonic()
@@ -682,11 +744,6 @@ def handle_keypad2():
                         elif key == "222":
                             mouse.move(x=0, y=-5)
 
-                        elif key == "232":
-                            display_off()
-
-                        elif key == "242":
-                            pass
                         
                         elif key == "233":
                             if layer_fixed == 1:
@@ -699,9 +756,6 @@ def handle_keypad2():
                         elif isinstance(key_mappings_keypad2_layer2[key], tuple):
                             for keycode in key_mappings_keypad2_layer2[key]:
                                 kbd.press(keycode)
-
-                        
-                                
 
                         else:
                         
@@ -741,6 +795,7 @@ async def main():
     create_task(handle_http_requests()),
     
     while True:
+        await time_date()
         await power_save()
         await display_refresh_current_runtime()  # Await display_refresh()
         await display_refresh_all_runtime()  # Await display_refresh()
@@ -763,6 +818,7 @@ except KeyboardInterrupt:
     pass
 finally:
     loop.close()
+
 
 
 
