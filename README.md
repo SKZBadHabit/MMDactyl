@@ -9,11 +9,16 @@ Welcome to MMDactyl, your custom-designed Dactyl keyboard powered by the RP2040w
 The heart of MMDactyl lies in its meticulously crafted code. Currently at version 3.10, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is startin to be implemented, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms.
 
 ### Status Overview
+
 - **Functional Layers**: Version 3.03 incorporates Layer 1 and Layer 2 seamlessly, providing users with versatile input options.
 - **Display Functionality**: The integrated display module offers essential information without relying on wireless connectivity.
 - **BIOS Compatibility**: MMDactyl seamlessly integrates into BIOS environments, ensuring compatibility across various systems.
 - **Layer Toggle**: Intuitive layer toggling enhances user experience, enabling effortless switching between configurations.
 - **Data Management**: Runtime data tracking is implemented, allowing users to monitor keyboard usage efficiently.
+
+### Installation/Creation of raspberry pi pico
+
+--> readme will follow for how to ...
 
 ## Lasercut Design
 
@@ -22,6 +27,7 @@ Crafted with precision, the lasercut design of MMDactyl ensures both aesthetic a
 ## Completed Steps
 
 MMDactyl has already achieved significant milestones, including:
+
 - **Hardware Integration**: Successful integration into existing keyboard structures, replacing the Arduino Pro Micro seamlessly.
 - **Code Adaptation**: The codebase has been tailored to suit the unique characteristics of MMDactyl, ensuring optimal performance.
 - **Display Integration**: Display functionality is implemented, providing essential feedback without the need for wireless connectivity.
@@ -34,6 +40,7 @@ MMDactyl has already achieved significant milestones, including:
 ## Next Steps
 
 As we move forward, the focus will be on further refinement and feature expansion. Upcoming tasks include:
+
 - **Testing and Refinement**: Rigorous testing will ensure the stability and reliability of MMDactyl under various conditions.
 - **Wiring Plan Completion**: Finalizing the wiring plan to optimize functionality and ease of assembly.
 - **Display Enhancements**: Introducing additional display functionalities such as weather updates and keyboard status indicators./ for now only one option
