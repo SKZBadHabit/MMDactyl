@@ -8,15 +8,7 @@ Welcome to MMDactyl, your custom-designed Dactyl keyboard powered by the RP2040w
 
 The heart of MMDactyl lies in its meticulously crafted code. Currently at version 3.10, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is startin to be implemented, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms.
 
-### Status Overview
-
-- **Functional Layers**: Version 3.03 incorporates Layer 1 and Layer 2 seamlessly, providing users with versatile input options.
-- **Display Functionality**: The integrated display module offers essential information without relying on wireless connectivity.
-- **BIOS Compatibility**: MMDactyl seamlessly integrates into BIOS environments, ensuring compatibility across various systems.
-- **Layer Toggle**: Intuitive layer toggling enhances user experience, enabling effortless switching between configurations.
-- **Data Management**: Runtime data tracking is implemented, allowing users to monitor keyboard usage efficiently.
-
-### Installation/Creation of raspberry pi pico
+## Installation/Creation of raspberry pi pico
 
 --> readme will follow for how to ...
 
