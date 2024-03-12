@@ -20,12 +20,13 @@ from asyncio import create_task, sleep as async_sleep
 import json
 from adafruit_httpserver import Server, REQUEST_HANDLED_RESPONSE_SENT, Request, FileResponse, Response
 import adafruit_ntp
+import gc
 
 
 
 # TODO start and stop webserver / WIFI over button and in energy saving Mode
 
-# TODO -- ADD autorefresh option in Website
+
 
 
 
@@ -95,6 +96,8 @@ FILENAME_RUNTIME = "/runtime.txt"
 FILENAME_KEYPRESS = "/keypress.txt"
 ENERGY_SAVE_REFRESH_TIME = 380
 DATE_TIME_REFRESH_TIME = 63
+GC_REFRESH_TIME = 310
+gc_refresh = 0
 energy_save = time.monotonic()
 energy_mod = 0
 current_keypress = 0
@@ -289,7 +292,7 @@ try:
 
     @server.route("/data", methods=["GET", "POST"])  # Allow POST requests
     def runtime_data(request: Request):
-        global current_runtime, alltime_runtime, layer, display_html_power, display_off_manually
+        global current_runtime, alltime_runtime, layer, display_html_power, display_off_manually, formatted_time
 
         if request.method == "POST":
             try:
@@ -313,7 +316,8 @@ try:
             "keypress_now": current_keypress,
             "keypress_all": alltime_keypress,
             "layer": layer,
-            "display_html_power": display_html_power  # Include display power state in response
+            "display_html_power": display_html_power,  # Include display power state in response,
+            "keyboard_time": formatted_date + "  " + formatted_time
         }
         return Response(request, json.dumps(data), content_type="application/json")
 
@@ -329,6 +333,7 @@ except Exception as e:
 
     
 
+################################################################
 
 async def handle_http_requests():
     try:
@@ -374,8 +379,22 @@ async def time_date():
             print("no WIFI connection / NTP not working")
             date_time_refresh = time.monotonic()
 
+
 ################################################################        
 
+async def gc_collecting():
+    global gc_refresh
+
+    if time.monotonic() - gc_refresh >= GC_REFRESH_TIME:
+        #show memory used:
+        print("freemem before gc: ", gc.mem_free())
+        gc.collect()
+        print("freemem after gc: ", gc.mem_free())
+        gc_refresh = time.monotonic()        
+
+################################################################
+        
+        
 async def power_save():
     global energy_save, energy_mod
 
@@ -387,10 +406,16 @@ async def power_save():
         
         energy_save = time.monotonic()
 
+
+################################################################
+
 def power_save_off():
     cpu_full_power()
     if display_off_manually == 0:
         display_on()
+
+
+################################################################
 
 def cpu_low_power():
     cpu_frequency_mhz = microcontroller.cpu.frequency
@@ -399,6 +424,9 @@ def cpu_low_power():
     microcontroller.cpu.frequency = 65000000
     cpu_frequency_mhz = microcontroller.cpu.frequency
     print("now CPU Frequency:", cpu_frequency_mhz, "Hz")
+
+
+################################################################
     
 def cpu_full_power():
     cpu_frequency_mhz = microcontroller.cpu.frequency
@@ -407,13 +435,22 @@ def cpu_full_power():
     cpu_frequency_mhz = microcontroller.cpu.frequency
     print("now CPU Frequency:", cpu_frequency_mhz, "Hz")
 
+
+################################################################
+
 def display_off():
     save_mode = displayio.Group()
     display.show(save_mode)
     display.refresh()
 
+
+################################################################
+
 def display_on():
         display_main()
+
+
+################################################################
 
 
 def display_main():
@@ -455,6 +492,9 @@ def read_alltime_runtime():
         print("Error reading file:", e)
         return 0
     
+
+################################################################
+
 # Function to save all-time runtime/keypress to file
 def save_alltime_runtime():
     global runtime_refresh, current_runtime, alltime_runtime, cpu_temp, alltime_keypress, current_keypress, templastcurrentkeypresses
@@ -586,6 +626,9 @@ async def display_refresh_cpu():
         #display.refresh  # Refresh the display to reflect the changes
         display_delay_1 = time.monotonic()
 
+
+################################################################
+
 async def display_refresh_current_runtime():
 
     global current_runtime
@@ -596,6 +639,9 @@ async def display_refresh_current_runtime():
         
         #display.refresh  # Refresh the display to reflect the changes
         display_delay_2 = time.monotonic()
+
+
+################################################################
 
 async def display_refresh_all_runtime():
 
@@ -795,6 +841,7 @@ async def main():
     create_task(handle_http_requests()),
     
     while True:
+        await gc_collecting()
         await time_date()
         await power_save()
         await display_refresh_current_runtime()  # Await display_refresh()
@@ -818,6 +865,9 @@ except KeyboardInterrupt:
     pass
 finally:
     loop.close()
+
+
+
 
 
 
