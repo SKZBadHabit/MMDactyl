@@ -6,7 +6,7 @@ Welcome to MMDactyl, your custom-designed Dactyl keyboard powered by the RP2040w
 
 ## Coding Progress
 
-The heart of MMDactyl lies in its meticulously crafted code. Currently at version 3.10, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is implemented with webserver and ntp integration, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms.
+The heart of MMDactyl lies in its meticulously crafted code. Currently at version 3.12, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is implemented with webserver and ntp integration, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms.
 
 ## Installation/Creation of raspberry pi pico
 
@@ -37,7 +37,7 @@ As we move forward, the focus will be on further refinement and feature expansio
 - **Wiring Plan Completion**: Finalizing the wiring plan to optimize functionality and ease of assembly.
 - **Display Enhancements**: Introducing additional display functionalities such as weather updates and keyboard status indicators./ for now only one option
 - **Design Cleanup**: Refining the lasercut files to streamline production and enhance aesthetics.
-- **Layer Expansion**: Implementing additional layers to accommodate diverse user preferences and workflows.
+- **Layer Expansion**: Implementing additional layers to accommodate diverse user preferences and workflows. --> stopped no need for my personal usage for now
 - **Energy Management**: Introducing hibernation and energy-saving features to extend battery life and optimize power consumption. /started nearly finished - CPU reducing and Display clearing --> Missing wireless on/off
 - **Data Expansion**: Further expanding data management capabilities, including key counter functionalities and customizable settings. --> Key counter implemented customizable settings planed (Keyboard layout definition over file (perhaps))
 
