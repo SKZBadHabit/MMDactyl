@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MM Dactyl</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        border-radius: 15px; /* Rounded corners for the entire site */
+        overflow: hidden; /* Ensure content doesn't extend beyond rounded corners */
+      }
+
+      #logo {
+        max-width: 200px;
+        margin-bottom: 30px;
+      }
+
+      h1 {
+        color: #663399; /* Purple color for title */
+      }
+
+      .button-container {
+        display: flex;
+        justify-content: space-between;
+        width: calc(80% - 20px); /* Adjusted width to accommodate the margin */
+        max-width: 460px;
+        margin-bottom: 20px;
+        margin-top: 10px; /* Added margin to align with the table border */
+      }
+
+      button {
+        background-color: #663399; /* Purple color for button */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border-radius: 15px;
+      }
+
+      button:hover {
+        background-color: #5a2d85; /* Darker shade of purple on hover */
+      }
+
+      p {
+        margin: 10px 0;
+      }
+
+      .progress-bar {
+        width: 200px; /* Adjust width as needed */
+        height: 20px;
+        background-color: #ddd;
+        border-radius: 5px;
+        margin-top: 10px;
+        position: relative;
+      }
+
+      .progress {
+        height: 100%;
+        background-color: #663399; /* Purple color for progress */
+        border-radius: 5px;
+        transition: width 0.3s ease-in-out;
+        position: absolute;
+      }
+
+      table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 80%; /* Set width of the table */
+        max-width: 700px; /* Set maximum width of the table */
+        table-layout: fixed; /* Fixed layout to prevent automatic resizing */
+      }
+
+      td {
+        padding: 8px;
+        text-align: left;
+        width: 33%; /* Set each column to occupy 33% of the table width */
+        border: 2px solid #ddd; /* Add border to each column */
+        border-radius: 10px; /* Apply rounded corners to each column */
+        overflow: hidden; /* Ensure content doesn't extend beyond rounded corners */
+      }
+
+      /* Slide button styles */
+      .slide-toggle {
+        display: flex;
+        align-items: center;
+      }
+
+      .slide-toggle input {
+        display: none;
+      }
+
+      .slide-toggle-slider {
+        position: relative;
+        cursor: pointer;
+        width: 60px;
+        height: 34px;
+        background-color: #ccc;
+        border-radius: 34px;
+        transition: background-color 0.4s;
+      }
+
+      .slide-toggle-slider:before {
+        content: "";
+        position: absolute;
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        border-radius: 50%;
+        transition: transform 0.4s;
+      }
+
+      .slide-toggle input:checked + .slide-toggle-slider {
+        background-color: #663399; /* Purple color for activated slider */
+      }
+
+      .slide-toggle input:checked + .slide-toggle-slider:before {
+        transform: translateX(26px);
+      }
+
+      .column-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        width: 80%;
+        max-width: 660px;
+      }
+
+      .row-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <img id="logo" src="m-network.png" alt="M-Network" />
+    <h1>MM Dacyl Model 3-02</h1>
+
+    <table>
+      <tr>
+        <td>
+          <p id="cpu_speed"></p>
+          <div class="progress-bar">
+            <div id="progress-cpu-speed" class="progress"></div>
+          </div>
+          <p id="cpu_temp"></p>
+          <div class="progress-bar">
+            <div id="progress-cpu-temp" class="progress"></div>
+          </div>
+        </td>
+        <td>
+          <p id="runtime_now"></p>
+          <p id="runtime_all"></p>
+          <p id="keyboard_time"></p>
+          <!-- Added keyboard time here -->
+        </td>
+        <td>
+          <p id="keypress_now"></p>
+          <p id="keypress_all"></p>
+        </td>
+      </tr>
+    </table>
+    <div class="column-container">
+      <div class="row-container">
+        <label class="slide-toggle" for="auto-refresh">
+          <input
+            type="checkbox"
+            id="auto-refresh"
+            onclick="toggleAutoRefresh()"
+          />
+          <div class="slide-toggle-slider"></div>
+        </label>
+        <label for="auto-refresh">Auto Refresh every 99 seconds</label>
+        <div class="progress-bar" id="progress-timer">
+          <div id="timer" class="progress"></div>
+        </div>
+      </div>
+      <div class="row-container">
+        <label class="slide-toggle" for="display-power">
+          <input
+            type="checkbox"
+            id="display-power"
+            onclick="toggleDisplayPower()"
+          />
+          <div class="slide-toggle-slider"></div>
+        </label>
+        <label for="display-power">Display Power</label>
+      </div>
+    </div>
+    <div class="button-container">
+      <button onclick="navigateToSecondSite()">Layer - Layout</button>
+      <button onclick="fetchData()">Refresh</button>
+    </div>
+
+    <script>
+      let intervalId = null;
+      let timerIntervalId = null;
+      let timerPercentage = 100;
+
+      async function fetchData() {
+        const response = await fetch("/data");
+        const data = await response.json();
+
+        // CPU Speed Progress
+        const cpuSpeed = data.cpu_speed;
+        document.getElementById("cpu_speed").innerText =
+          "CPU speed: " + cpuSpeed + " mHz";
+        const progressCpuSpeed = document.getElementById("progress-cpu-speed");
+        const maxCpuSpeed = 125; // Maximum CPU speed
+        const percentCpuSpeed = (cpuSpeed / maxCpuSpeed) * 100;
+        progressCpuSpeed.style.width = percentCpuSpeed + "%";
+
+        // CPU Temp Progress
+        const cpuTemp = data.cpu_temp;
+        document.getElementById("cpu_temp").innerText =
+          "CPU temp: " + cpuTemp + " °C";
+        const progressCpuTemp = document.getElementById("progress-cpu-temp");
+        const minCpuTemp = 25; // Minimum CPU temp
+        const maxCpuTemp = 60; // Maximum CPU temp
+        const percentCpuTemp =
+          ((cpuTemp - minCpuTemp) / (maxCpuTemp - minCpuTemp)) * 100;
+        progressCpuTemp.style.width = percentCpuTemp + "%";
+
+        // Other data
+        document.getElementById("runtime_now").innerText =
+          "Runtime now: " + data.runtime_now + " min";
+        document.getElementById("runtime_all").innerText =
+          "Runtime all: " + data.runtime_all + " h";
+        document.getElementById("keypress_now").innerText =
+          "Keypress now: " + data.keypress_now + " x";
+        document.getElementById("keypress_all").innerText =
+          "Keypress all: " + data.keypress_all + " x";
+
+        // Update display power checkbox state
+        document.getElementById("display-power").checked =
+          data.display_html_power;
+
+        // Update keyboard time
+        document.getElementById("keyboard_time").innerText =
+          "Stand: " + data.keyboard_time;
+
+        // Reset timer percentage to 100% on refresh
+        timerPercentage = 100;
+        updateTimerProgress();
+      }
+
+      function navigateToSecondSite() {
+        // Redirect to the second site
+        window.location.href = "/second-site.html";
+      }
+
+      // Function to toggle display power and send it to server
+      function toggleDisplayPower() {
+        const displayPowerCheckbox = document.getElementById("display-power");
+        const displayPower = displayPowerCheckbox.checked;
+
+        // Send display power state to server
+        fetch("/data", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ display_html_power: displayPower }),
+        });
+
+        // Optionally, you can also perform any client-side actions here
+        // For example, show/hide elements based on display power state
+      }
+
+      function toggleAutoRefresh() {
+        const autoRefreshCheckbox = document.getElementById("auto-refresh");
+        if (autoRefreshCheckbox.checked) {
+          startAutoRefresh();
+        } else {
+          stopAutoRefresh();
+        }
+      }
+
+      function startAutoRefresh() {
+        if (intervalId) {
+          clearInterval(intervalId);
+        }
+        intervalId = setInterval(() => {
+          fetchData();
+          startTimer();
+        }, 99000); // 99 seconds in milliseconds
+        fetchData(); // Fetch data immediately when auto-refresh starts
+        startTimer(); // Start timer immediately
+      }
+
+      function stopAutoRefresh() {
+        clearInterval(intervalId);
+        intervalId = null;
+        clearInterval(timerIntervalId);
+        timerIntervalId = null;
+      }
+
+      function startTimer() {
+        // Reset timer percentage to 100% on auto-refresh
+        timerPercentage = 100;
+        updateTimerProgress();
+
+        if (timerIntervalId) {
+          clearInterval(timerIntervalId);
+        }
+        timerIntervalId = setInterval(updateTimer, 1000); // Update timer every second
+      }
+
+      function updateTimer() {
+        timerPercentage -= 1.0101; // Decrease percentage to represent 99 seconds
+        updateTimerProgress();
+        if (timerPercentage <= 0) {
+          clearInterval(timerIntervalId);
+          timerIntervalId = null;
+          timerPercentage = 0;
+          updateTimerProgress();
+        }
+      }
+
+      function updateTimerProgress() {
+        const timerProgress = document.getElementById("timer");
+        timerProgress.style.width = timerPercentage + "%";
+      }
+
+      // Fetch data once the DOM content is loaded
+      document.addEventListener("DOMContentLoaded", () => {
+        fetchData();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Layer - Layout</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        border-radius: 15px;
+        overflow: hidden;
+      }
+
+      h1 {
+        color: #663399;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+      }
+
+      .button-container {
+        margin-top: 20px;
+      }
+
+      .back-button {
+        background-color: #663399;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin-top: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border-radius: 15px; /* Rounded corners for the button */
+      }
+
+      .back-button:hover {
+        background-color: #5a2d85;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Keyboard Layout Layer 1 and 2</h1>
+    <!-- Place for two pictures -->
+    <div class="image-container">
+      <img src="mmdactyl_rp2040_layer1.png" alt="Layer 1" />
+      <img src="mmdactyl_rp2040_layer2.png" alt="Layer 2" />
+    </div>
+    <!-- Back to main menu button -->
+    <div class="button-container">
+      <button class="back-button" onclick="navigateToMainMenu()">
+        Back to Main Menu
+      </button>
+    </div>
+
+    <script>
+      // Function to navigate back to the main menu
+      function navigateToMainMenu() {
+        // Redirect to the main site
+        window.location.href = "/index.html";
+      }
+    </script>
+  </body>
+</html>
