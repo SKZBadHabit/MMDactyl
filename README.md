@@ -42,3 +42,14 @@ As we move forward, the focus will be on further refinement and feature expansio
 - **Data Expansion**: Further expanding data management capabilities, including key counter functionalities and customizable settings. --> Key counter implemented customizable settings planed (Keyboard layout definition over file (perhaps))
 
 Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technological innovation, and user-centric functionality.
+
+## Preview of my actual keyboard layot:
+
+### Layer 1
+
+![MMDactyl Keyboard](hardware/mmdactyl_rp2040_layer1.png)
+
+
+### Layer 2
+
+![MMDactyl Keyboard](hardware/mmdactyl_rp2040_layer2.png)
