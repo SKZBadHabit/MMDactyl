@@ -525,7 +525,7 @@ def handle_keypad2():
                             cc.send(ConsumerControlCode.MUTE)
                             cc.release()
                             #TEST this part
-                            pressed_keys_keypad1.append("215")
+                            #pressed_keys_keypad1.append("215")
 
                         elif key == "233":
                             if layer_fixed == 1:

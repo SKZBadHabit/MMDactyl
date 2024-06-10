@@ -108,7 +108,7 @@ key_mappings_keypad1_layer2 = {
     "143": Keycode.Z,#
     "144": Keycode.RIGHT_SHIFT,#
     "145": Keycode.GRAVE_ACCENT,#
-    "146": Keycode.RINT_SCREEN,
+    "146": Keycode.PRINT_SCREEN,
     "151": "151",# FN Change Hold
     "152": Keycode.RIGHT_ALT,#
     "153": Keycode.LEFT_GUI,#
@@ -134,7 +134,7 @@ key_mappings_keypad2_layer2 = {
     "234": Keycode.LEFT_SHIFT,#
     "235": Keycode.LEFT_CONTROL,#
     "241": Keycode.F10,#
-    "242": 242,# Display
+    "242": Keycode.P,#
     "243": Keycode.SEMICOLON,#
     "244": Keycode.KEYPAD_BACKSLASH,#
     "245": Keycode.RIGHT_BRACKET,#
