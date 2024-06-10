@@ -6,7 +6,7 @@ Welcome to MMDactyl, your custom-designed Dactyl keyboard powered by the RP2040w
 
 ## Coding Progress
 
-The heart of MMDactyl lies in its meticulously crafted code. Currently at version 3.12, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is implemented with webserver and ntp integration, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms.
+The heart of MMDactyl lies in its meticulously crafted code. Currently at version 3.13, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is implemented with webserver and ntp integration, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms.
 
 ## Installation/Creation of raspberry pi pico
 
@@ -43,12 +43,17 @@ As we move forward, the focus will be on further refinement and feature expansio
 
 Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technological innovation, and user-centric functionality.
 
+## Bugfix
+
+**3.13**:
+
+- with Version 3.13 comes the first bugfix and not only feature update. When NTP not reaching the keyboard got stuck until it reached the timeout -- fixed now it only gets it time from the ntp when initializing and then it counts itself so no delay from internet needed
+
 ## Preview of my actual keyboard layot:
 
 ### Layer 1
 
 ![MMDactyl Keyboard](hardware/mmdactyl_rp2040_layer1.png)
-
 
 ### Layer 2
 
