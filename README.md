@@ -56,9 +56,10 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 
 - with Version 3.13 the bugfix for NTP is perfect but, another problem occured with long time use, the flash storage is getting really slow so with the next big Version Step which is already staged will fix this issue.
 
-## Known Bugs
+## Installation Guide:
 
-Installation Guide: Libs/readme.md
+Firmware + Libraries: https://github.com/SKZBadHabit/MMDactyl/blob/13bb51ad6b89758595acefa5d67b2ed847959f11/Libs/readme.md
+Install to Raspberry: https://github.com/SKZBadHabit/MMDactyl/blob/913b7bfbf31d202d734bb9de5b815391ad87dade/Coding/README.md
 
 
 ## Preview of my actual keyboard layot:
