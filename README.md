@@ -36,7 +36,7 @@ MMDactyl has already achieved significant milestones, including:
 As we move forward, the focus will be on further refinement and feature expansion. Upcoming tasks include:
 
 - **Changing out to RP2W with more security features**: Setting the Rp2w up with ciruitpython testing features and using new technology for storing the code!
-- **Testing and Refinement**: Rigorous testing will ensure the stability and reliability of MMDactyl under various conditions. - Auto Reboot of keyboard after a Runtime over 1500 Minutes??
+- **Testing and Refinement**: Rigorous testing will ensure the stability and reliability of MMDactyl under various conditions. - Auto Reboot of keyboard after a Runtime over 1500 Minutes but could be my DHCP because i lose the wifi connection.
 - **Wiring Plan Completion**: Finalizing the wiring plan to optimize functionality and ease of assembly.
 - **Display Enhancements**: Introducing additional display functionalities such as weather updates and keyboard status indicators./ for now only one option
 - **Energy Management**: Introducing hibernation and energy-saving features to extend battery life and optimize power consumption. /started nearly finished - CPU reducing and Display clearing --> Missing wireless on/off
@@ -55,6 +55,7 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 **3.13**:
 
 - with Version 3.13 the bugfix for NTP is perfect but, another problem occured with long time use, the flash storage is getting really slow so with the next big Version Step which is already staged will fix this issue.
+- after a really long runtime over 2000+ minutes of Runtime, the keyboard sometimes looses its wireless connection (could be also my DHCP)
 
 ## Installation Guide:
 
