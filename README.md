@@ -56,6 +56,11 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 
 - with Version 3.13 the bugfix for NTP is perfect but, another problem occured with long time use, the flash storage is getting really slow so with the next big Version Step which is already staged will fix this issue.
 
+## Known Bugs
+
+Installation Guide: Libs/readme.md
+
+
 ## Preview of my actual keyboard layot:
 
 ### Layer 1
