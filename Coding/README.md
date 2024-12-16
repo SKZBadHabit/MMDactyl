@@ -1,12 +1,9 @@
-# RAW code
+# Installation
 
-## dev*mmdactyl_rp_circuitpython*....
+## Copy Code 
 
-code under development for keyboard root / on raspberry
+copy the things inside the version folder (example: 3.13) to your flashed raspberry
 
-## dev_index.html
-
-code for webserver now placed in folder under /static/index.html
 
 ## files for store data
 
