@@ -1,9 +1,9 @@
 # Installation
 
 
-## Copy Code 
+## Download 
 
-downlad the newest Version from github
+downlad the latest Version from github 
 
 
 ## Copy Code 
