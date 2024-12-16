@@ -1,5 +1,11 @@
 # Installation
 
+
+## Copy Code 
+
+downlad the newest Version from github
+
+
 ## Copy Code 
 
 copy the things inside the version folder (example: 3.13) to your flashed raspberry
