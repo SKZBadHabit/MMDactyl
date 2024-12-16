@@ -50,6 +50,12 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 
 - with Version 3.13 comes the first bugfix and not only feature update. When NTP not reaching the keyboard got stuck until it reached the timeout -- fixed now it only gets it time from the ntp when initializing and then it counts itself so no delay from internet needed
 
+## Known Bugs
+
+**3.13**:
+
+- with Version 3.13 the bugfix for NTP is perfect but, another problem occured with long time use, the flash storage is getting really slow so with the next big Version Step which is already staged will fix this issue.
+
 ## Preview of my actual keyboard layot:
 
 ### Layer 1
