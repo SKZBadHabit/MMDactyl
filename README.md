@@ -33,6 +33,7 @@ MMDactyl has already achieved significant milestones, including:
 
 As we move forward, the focus will be on further refinement and feature expansion. Upcoming tasks include:
 
+- **Changing out to RP2W with more security features**: Setting the Rp2w up with ciruitpython testing features and using new technology for storing the code!
 - **Testing and Refinement**: Rigorous testing will ensure the stability and reliability of MMDactyl under various conditions.
 - **Wiring Plan Completion**: Finalizing the wiring plan to optimize functionality and ease of assembly.
 - **Display Enhancements**: Introducing additional display functionalities such as weather updates and keyboard status indicators./ for now only one option
