@@ -8,13 +8,17 @@ Welcome to MMDactyl, your custom-designed Dactyl keyboard powered by the RP2040w
 
 The heart of MMDactyl lies in its meticulously crafted code. Currently at version 3.13, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is implemented with webserver and ntp integration, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms. A Gaming mode was added wich eliminates unnecessary updates of the oled to increase performance so you can game with minimal inpud lag.
 
-## Installation/Creation of raspberry pi pico
+## Installation Guide:
 
---> readme will follow for how to ...
+Firmware + Libraries: [InstallFW+LIBS](https://github.com/SKZBadHabit/MMDactyl/blob/13bb51ad6b89758595acefa5d67b2ed847959f11/Libs/readme.md)
+
+Install to Raspberry: [InstallSoftware](https://github.com/SKZBadHabit/MMDactyl/blob/913b7bfbf31d202d734bb9de5b815391ad87dade/Coding/README.md)
 
 ## Lasercut Design
 
 Crafted with precision, the lasercut design of MMDactyl ensures both aesthetic appeal and functional integrity. While the current files are fully functional, ongoing efforts are directed towards refining the design for enhanced aesthetics and ease of assembly.
+
+Lasercut file: [Draft V6](https://github.com/SKZBadHabit/MMDactyl/blob/81d787dbbb0f32ff22e5135cbfd6715d70f594c2/hardware/lasercut_Draftv6.dxf)
 
 ## Completed Steps
 
@@ -66,12 +70,6 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 
 - with Version 3.13 the bugfix for NTP is perfect but, another problem occured with long time use, the flash storage is getting really slow so with the next big Version Step which is already staged will fix this issue.
 - after a really long runtime over 2000+ minutes of Runtime, the keyboard sometimes looses its wireless connection (could be also my DHCP)
-
-## Installation Guide:
-
-Firmware + Libraries: [InstallFW+LIBS](https://github.com/SKZBadHabit/MMDactyl/blob/13bb51ad6b89758595acefa5d67b2ed847959f11/Libs/readme.md)
-
-Install to Raspberry: [InstallSoftware](https://github.com/SKZBadHabit/MMDactyl/blob/913b7bfbf31d202d734bb9de5b815391ad87dade/Coding/README.md)
 
 ## Preview of my actual keyboard layot:
 
