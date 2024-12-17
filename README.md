@@ -20,6 +20,10 @@ Crafted with precision, the lasercut design of MMDactyl ensures both aesthetic a
 
 Lasercut file: [Draft V6](https://github.com/SKZBadHabit/MMDactyl/blob/81d787dbbb0f32ff22e5135cbfd6715d70f594c2/hardware/lasercut_Draftv6.dxf)
 
+## Cableing Layout
+
+Guidance for cabeling the whole Layout: [wiring plan](https://github.com/SKZBadHabit/MMDactyl/blob/10f35b508a4e143fbe565600e66eda0c517da561/hardware/begin_cable_plan.png)
+
 ## Completed Steps
 
 MMDactyl has already achieved significant milestones, including:
