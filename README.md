@@ -10,7 +10,7 @@ The heart of MMDactyl lies in its meticulously crafted code. Currently at versio
 
 ## Installation Guide:
 
-Firmware + Libraries: [InstallFW+LIBS](https://github.com/SKZBadHabit/MMDactyl/blob/13bb51ad6b89758595acefa5d67b2ed847959f11/Libs/readme.md)
+Firmware + Libraries: [InstallFW+LIBS](firm_libs/readme.md)
 
 Install to Raspberry: [InstallSoftware](https://github.com/SKZBadHabit/MMDactyl/blob/913b7bfbf31d202d734bb9de5b815391ad87dade/Coding/README.md)
 
