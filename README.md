@@ -44,6 +44,16 @@ As we move forward, the focus will be on further refinement and feature expansio
 
 Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technological innovation, and user-centric functionality.
 
+## Version Infos
+
+**3.13**:
+
+- fully functioning Version3
+
+**5.x**:
+
+- in the folder but not released fully functioning with some extra performance patches, nof fully documented last Update of the RP2040 Version with Circuitpython Version 8
+
 ## Bugfix
 
 **3.13**:
@@ -62,7 +72,6 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 Firmware + Libraries: [InstallFW+LIBS](https://github.com/SKZBadHabit/MMDactyl/blob/13bb51ad6b89758595acefa5d67b2ed847959f11/Libs/readme.md)
 
 Install to Raspberry: [InstallSoftware](https://github.com/SKZBadHabit/MMDactyl/blob/913b7bfbf31d202d734bb9de5b815391ad87dade/Coding/README.md)
-
 
 ## Preview of my actual keyboard layot:
 
