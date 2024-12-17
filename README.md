@@ -12,17 +12,17 @@ The heart of MMDactyl lies in its meticulously crafted code. Currently at versio
 
 Firmware + Libraries: [InstallFW+LIBS](firm_libs/readme.md)
 
-Install to Raspberry: [InstallSoftware](https://github.com/SKZBadHabit/MMDactyl/blob/913b7bfbf31d202d734bb9de5b815391ad87dade/Coding/README.md)
+Install to Raspberry Pi Pico: [InstallSoftware](code/README.md)
 
 ## Lasercut Design
 
 Crafted with precision, the lasercut design of MMDactyl ensures both aesthetic appeal and functional integrity. While the current files are fully functional, ongoing efforts are directed towards refining the design for enhanced aesthetics and ease of assembly.
 
-Lasercut file: [Draft V6](https://github.com/SKZBadHabit/MMDactyl/blob/81d787dbbb0f32ff22e5135cbfd6715d70f594c2/hardware/lasercut_Draftv6.dxf)
+Lasercut file: [Draft V6](hardware/lasercut_Draftv6.dxf)
 
 ## Cableing Layout
 
-Guidance for cabeling the whole Layout: [wiring plan](https://github.com/SKZBadHabit/MMDactyl/blob/10f35b508a4e143fbe565600e66eda0c517da561/hardware/begin_cable_plan.png)
+Guidance for cabeling the whole Layout: [wiring plan](hardware/begin_cable_plan.png)
 
 ## Completed Steps
 
