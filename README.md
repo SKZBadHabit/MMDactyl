@@ -6,7 +6,7 @@ Welcome to MMDactyl, your custom-designed Dactyl keyboard powered by the RP2040w
 
 ## Coding Progress
 
-The heart of MMDactyl lies in its meticulously crafted code. Currently at version 3.13, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is implemented with webserver and ntp integration, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms. A Gaming mode was added wich eliminates unnecessary updates of the oled to increase performance so you can game with minimal inpud lag.
+The heart of MMDactyl lies in its meticulously crafted code. Currently at version 6.0, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is implemented with webserver and ntp integration, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms. Now fresh with Raspberry Pi Pico 2 W support and with Circuitpython v9 firmware.
 
 ## Installation Guide:
 
@@ -34,7 +34,7 @@ MMDactyl has already achieved significant milestones, including:
 - **BIOS Compatibility**: MMDactyl operates seamlessly within BIOS environments, guaranteeing system-wide compatibility.
 - **Layer Management**: The addition of a layer toggle button enhances user flexibility and workflow efficiency.
 - **Data Management**: Runtime data tracking is functional, providing insights into keyboard usage patterns.
-- **Web Interface Integration**: Creating a web interface accessible via the RP2040w for convenient settings adjustment and monitoring. --> Started with Version 3.04
+- **Web Interface Integration**: Creating a web interface accessible via the RP2040w/RP2350w for convenient settings adjustment and monitoring. --> Started with Version 3.04
 - **Time Date**: Time and date synchronistation and displaying on oled from ntp server
 - **Design Cleanup**: Refining the lasercut files to streamline production and enhance aesthetics.
 - **Layer Expansion**: Implementing additional layers to accommodate diverse user preferences and workflows. --> stopped no need for my personal usage for now
@@ -82,7 +82,6 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
   6.0:
 
 - on some starts buggy - no reason why for now
--
 
 ## Example of Layer layout:
 
