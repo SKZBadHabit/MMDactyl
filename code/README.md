@@ -2,21 +2,24 @@
 
 ## Download
 
-downlad the latest Version from github
+downlad the latest Version from github all needed files for the appropiate version is included
 
-## Copy Codecopy the things inside the version folder (example: 3.13) to your flashed raspberry
+## (example: 6.0) raspberry RP2350
 
-Files under MMdactyl/code/3.13
+## (example: 3.13) raspberry RP2040
+
+- copy the Files under MMdactyl/code/3.13 to your RP2040 AFTER you prepared your RP with Circuitpython V8.
+- Please pay attention when copy libs folder look up under readme of [firm_libs](firm_libs/readme.md) to use the right version
 
 ## files for store data
 
 create manually for installation
 
-/runtime.txt
+- /runtime.txt
 
-/keypress.txt
+- /keypress.txt
 
-/settings.toml
+- /settings.toml
 
 ## file Information:
 
