@@ -1,4 +1,4 @@
-# MMDactyl - RP2040w Japanese Duplex Matrix
+# MMDactyl - RP2040w & RP2350 Japanese Duplex Matrix
 
 Welcome to MMDactyl, your custom-designed Dactyl keyboard powered by the RP2040w microcontroller. This keyboard is not only a functional input device but also a testament to precision engineering and innovative coding. Below, you'll find details on its development, coding progress, lasercut designs, completed steps, and what's next on the agenda.
 
@@ -62,6 +62,10 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 
 - in the folder but not released fully functioning with some extra performance patches, nof fully documented last Update of the RP2040 Version with Circuitpython Version 8
 
+  6.0:
+
+- First version for RP2350 w
+
 ## Bugfix
 
 **3.13**:
@@ -75,7 +79,12 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 - with Version 3.13 the bugfix for NTP is perfect but, another problem occured with long time use, the flash storage is getting really slow so with the next big Version Step which is already staged will fix this issue.
 - after a really long runtime over 2000+ minutes of Runtime, the keyboard sometimes looses its wireless connection (could be also my DHCP)
 
-## Preview of my actual keyboard layot:
+  6.0:
+
+- on some starts buggy - no reason why for now
+-
+
+## Example of Layer layout:
 
 ### Layer 1
 
