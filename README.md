@@ -81,7 +81,7 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 
   6.0:
 
-- on some starts buggy - no reason why for now
+- on some starts buggy - no reason why for now.
 
 ## Example of Layer layout:
 
