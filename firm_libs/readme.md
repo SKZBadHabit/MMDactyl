@@ -10,7 +10,6 @@ for Raspberry pi pico 2350 w:
 for Raspberry pi pico 2040 w:
 
 - RP_2040_V8_Libs
-
 - RP_2040_V8_adafruit-circuitpython...
 
 ## Fresh from the firmware and libs provider:

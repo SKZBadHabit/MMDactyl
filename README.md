@@ -8,13 +8,11 @@ Welcome to MMDactyl, your custom-designed Dactyl keyboard powered by the RP2040w
 
 The heart of MMDactyl lies in its meticulously crafted code. Currently at version 6.0, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is implemented with webserver and ntp integration, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms. Now fresh with Raspberry Pi Pico 2 W support and with Circuitpython v9 firmware.
 
-
 ## Installation Guide:
 
 Firmware + Libraries: [InstallFW+LIBS](firm_libs/readme.md)
 
 Install to Raspberry Pi Pico: [InstallSoftware](code/README.md)
-
 
 ## Lasercut Design
 
@@ -24,10 +22,11 @@ Lasercut file: [Draft V6](hardware/lasercut_Draftv6.dxf)
 
 Pics of the finished product: [pics](hardware/pics_of_keyboard)
 
-
 ## Cableing Layout
 
 Guidance for cabeling the whole Layout: [wiring plan](hardware/begin_cable_plan.png)
+
+Informations about the ideea: [information cabel plan]()
 
 ## Completed Steps
 
@@ -57,7 +56,6 @@ As we move forward, the focus will be on further refinement and feature expansio
 
 Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technological innovation, and user-centric functionality.
 
-
 ## Version Infos
 
 **3.13**:
@@ -70,7 +68,7 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 
 **6.0:**
 
-* First version for RP2350 w
+- First version for RP2350 w
 
 ## Bugfix
 
@@ -87,7 +85,7 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 
 **6.0:**
 
-* on some starts buggy - no reason why for now.
+- on some starts buggy - no reason why for now.
 
 ## Example of Layer layout:
 
