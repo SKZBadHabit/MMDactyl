@@ -62,7 +62,7 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 
 - in the folder but not released fully functioning with some extra performance patches, nof fully documented last Update of the RP2040 Version with Circuitpython Version 8
 
-  6.0:
+**6.0:**
 
 - First version for RP2350 w
 
@@ -81,7 +81,7 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 
   6.0:
 
-- on some starts buggy - no reason why for now.
+* on some starts buggy - no reason why for now.
 
 ## Example of Layer layout:
 
