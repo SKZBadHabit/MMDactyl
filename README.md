@@ -26,7 +26,7 @@ Pics of the finished product: [pics](hardware/pics_of_keyboard)
 
 Guidance for cabeling the whole Layout: [wiring plan](hardware/begin_cable_plan.png)
 
-Informations about the ideea: [information cabel plan]()
+Informations about the ideea: [information cabel plan](hardware/README.md)
 
 ## Completed Steps
 
