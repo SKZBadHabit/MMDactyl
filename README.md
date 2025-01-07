@@ -16,7 +16,7 @@ Install to Raspberry Pi Pico: [InstallSoftware](code/README.md)
 
 ## Lasercut Design
 
-Crafted with precision, the lasercut design of MMDactyl ensures both aesthetic appeal and functional integrity. While the current files are fully functional, ongoing efforts are directed towards refining the design for enhanced aesthetics and ease of assembly.
+Crafted with precision, the lasercut design of MMDactyl ensures both aesthetic appeal and functional integrity. While the current files are fully functional, ongoing efforts are directed towards refining the design for enhanced aesthetics and ease of assembly. (3mm black acryl was used in the example picture above) The file is for now not completed because you have to multiply some parts, will be changed soon.
 
 Lasercut file: [Draft V6](hardware/lasercut_Draftv6.dxf)
 
