@@ -79,9 +79,9 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 - with Version 3.13 the bugfix for NTP is perfect but, another problem occured with long time use, the flash storage is getting really slow so with the next big Version Step which is already staged will fix this issue.
 - after a really long runtime over 2000+ minutes of Runtime, the keyboard sometimes looses its wireless connection (could be also my DHCP)
 
-  6.0:
+**6.0:**
 
-* on some starts buggy - no reason why for now.
+- on some starts buggy - no reason why for now.
 
 ## Example of Layer layout:
 
