@@ -1,6 +1,6 @@
 # MMDactyl - RP2040w & RP2350 Japanese Duplex Matrix
 
-Welcome to MMDactyl, your custom-designed Dactyl keyboard powered by the RP2040w microcontroller. This keyboard is not only a functional input device but also a testament to precision engineering and innovative coding. Below, you'll find details on its development, coding progress, lasercut designs, completed steps, and what's next on the agenda.
+Welcome to MMDactyl, your custom-designed Dactyl keyboard powered by the RP2040w/RP2350w microcontroller. This keyboard is not only a functional input device but also a testament to precision engineering and innovative coding. Below, you'll find details on its development, coding progress, lasercut designs, completed steps, and what's next on the agenda.
 
 ![MMDactyl Keyboard](https://github.com/SKZBadHabit/MMDactyl/assets/72281265/1e6f7bd4-ab28-4964-b751-b02aff36cae3)
 
