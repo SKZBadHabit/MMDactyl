@@ -4,7 +4,7 @@ installation of Firmware: [HOW-TO](https://learn.adafruit.com/welcome-to-circuit
 
 for Raspberry pi pico 2350 w:
 
-- Circuitpython_v9_Libs
+- Circuitpython Firmware (freshes tested Version)
 - Circuitpython_v9_Libs_12_2024
 
 for Raspberry pi pico 2040 w:

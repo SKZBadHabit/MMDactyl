@@ -6,7 +6,7 @@ Welcome to MMDactyl, your custom-designed Dactyl keyboard powered by the RP2040w
 
 ## Coding Progress
 
-The heart of MMDactyl lies in its meticulously crafted code. Currently at version 6.0, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is implemented with webserver and ntp integration, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms. Now fresh with Raspberry Pi Pico 2 W support and with Circuitpython v9 firmware.
+The heart of MMDactyl lies in its meticulously crafted code. Currently at version 6.1, the code is fully functional, encompassing the fundamental layers, basic display functionality, and BIOS support. While wireless functionality is implemented with webserver and ntp integration, the focus remains on refining existing features and laying the groundwork for future enhancements, including energy-saving mechanisms. Now fresh with Raspberry Pi Pico 2 W support and with Circuitpython v9 firmware.
 
 ## Installation Guide:
 
@@ -70,6 +70,10 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 
 - First version for RP2350 w
 
+**6.1:**
+
+- Smoothing out some parts, adding multiple retrys to connect to wifi. Buggy start fixed.
+
 ## Bugfix
 
 **3.13**:
@@ -86,6 +90,10 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 **6.0:**
 
 - on some starts buggy - no reason why for now.
+
+**6.1:**
+
+- nothing for now
 
 ## Example of Layer layout:
 
