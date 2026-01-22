@@ -93,7 +93,7 @@ Stay tuned as MMDactyl evolves into a pinnacle of ergonomic design, technologica
 
 **6.1:**
 
-- nothing for now
+- perfection until now
 
 ## Example of Layer layout:
 
